@@ -1,4 +1,4 @@
--- // Kali AiPad OS // v5.1 // executor // brightness FIX
+-- // Kali AiPad OS // v5.7 // executor // TOUCH-FLING BYPASS ANTIFLING
 print("[Kali] start")
 
 local Players = game:GetService("Players")
@@ -17,21 +17,17 @@ for _, v in ipairs(PG:GetChildren()) do
         v:Destroy()
     end
 end
-for _, v in ipairs(LP.Backpack:GetChildren()) do if v.Name == "Kali AiPad" then v:Destroy() end end
+for _, v in ipairs(LP.Backpack:GetChildren()) do if v.Name == "Kali Ai Pad" then v:Destroy() end end
 if LP.Character then
     for _, v in ipairs(LP.Character:GetChildren()) do
-        if v.Name == "Kali AiPad" then v:Destroy() end
+        if v.Name == "Kali Ai Pad" then v:Destroy() end
     end
 end
 
 -- STATE
 _G.KaliAiPad = _G.KaliAiPad or {}
 _G.KaliAiPad.settings = _G.KaliAiPad.settings or {
-    accent = {0,255,150},
-    wallpaper = 1,
-    brightness = 100,
-    transparency = 10,
-    clickSound = true,
+    accent = {0,255,150}, wallpaper = 1, brightness = 100, transparency = 10, clickSound = true,
 }
 _G.KaliAiPad.binds = _G.KaliAiPad.binds or {}
 _G.KaliAiPad.positions = _G.KaliAiPad.positions or {}
@@ -39,15 +35,11 @@ _G.KaliAiPad.powered = true
 _G.KaliAiPad.registry = {}
 
 local themeElements = {}
-local function registerTheme(element, kind)
-    table.insert(themeElements, {element=element, kind=kind})
-end
-
+local function registerTheme(el, kind) table.insert(themeElements, {element=el, kind=kind}) end
 local function accent()
     local s = _G.KaliAiPad.settings.accent
     return Color3.fromRGB(s[1], s[2], s[3])
 end
-
 local function applyTheme()
     local col = accent()
     for _, item in ipairs(themeElements) do
@@ -64,14 +56,10 @@ local function applyTheme()
 end
 
 local WALLPAPERS = {
-    {{0,45,28},{0,12,8},{0,70,45}},
-    {{35,10,50},{8,0,20},{60,20,80}},
-    {{50,25,10},{15,5,0},{80,40,15}},
-    {{5,25,50},{0,5,20},{10,45,75}},
-    {{55,5,25},{20,0,10},{80,15,40}},
-    {{25,25,25},{10,10,10},{40,40,40}},
-    {{10,40,40},{5,15,15},{20,60,60}},
-    {{40,10,10},{15,5,5},{60,20,20}},
+    {{0,45,28},{0,12,8},{0,70,45}}, {{35,10,50},{8,0,20},{60,20,80}},
+    {{50,25,10},{15,5,0},{80,40,15}}, {{5,25,50},{0,5,20},{10,45,75}},
+    {{55,5,25},{20,0,10},{80,15,40}}, {{25,25,25},{10,10,10},{40,40,40}},
+    {{10,40,40},{5,15,15},{20,60,60}}, {{40,10,10},{15,5,5},{60,20,20}},
 }
 
 -- TOOL
@@ -79,7 +67,6 @@ local Tool = Instance.new("Tool")
 Tool.Name = "Kali AiPad"
 Tool.RequiresHandle = true
 Tool.CanBeDropped = false
-
 local Handle = Instance.new("Part")
 Handle.Name = "Handle"
 Handle.Size = Vector3.new(1.3, 0.06, 1.9)
@@ -87,7 +74,6 @@ Handle.Color = Color3.fromRGB(12, 12, 12)
 Handle.CanCollide = false
 Handle.Massless = true
 Handle.Parent = Tool
-
 local ScreenPart = Instance.new("Part")
 ScreenPart.Size = Vector3.new(1.15, 0.02, 1.7)
 ScreenPart.Material = Enum.Material.Neon
@@ -95,10 +81,8 @@ ScreenPart.Color = Color3.fromRGB(0, 180, 110)
 ScreenPart.CanCollide = false
 ScreenPart.Massless = true
 ScreenPart.Parent = Tool
-
 local w1 = Instance.new("WeldConstraint", Handle)
-w1.Part0 = Handle
-w1.Part1 = ScreenPart
+w1.Part0 = Handle w1.Part1 = ScreenPart
 Tool.Parent = LP.Backpack
 
 -- GUI
@@ -130,7 +114,6 @@ Body.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 Body.BorderSizePixel = 0
 Body.Parent = ScreenGui
 Instance.new("UICorner", Body).CornerRadius = UDim.new(0, 46)
-
 local bodyGrad = Instance.new("UIGradient", Body)
 bodyGrad.Rotation = 120
 bodyGrad.Color = ColorSequence.new{
@@ -142,7 +125,6 @@ local bodyStroke = Instance.new("UIStroke", Body)
 bodyStroke.Color = Color3.fromRGB(75, 75, 82)
 bodyStroke.Thickness = 3
 
--- PHYS BUTTONS
 local function makePhysBtn(name, anchor, pos, size)
     local b = Instance.new("TextButton", Body)
     b.Name = name
@@ -172,7 +154,6 @@ camPimple.BackgroundColor3 = Color3.fromRGB(25,25,28)
 camPimple.BorderSizePixel = 0
 Instance.new("UICorner", camPimple).CornerRadius = UDim.new(1, 0)
 
--- SCREEN
 local Screen = Instance.new("Frame")
 Screen.AnchorPoint = Vector2.new(0.5, 0.5)
 Screen.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -183,7 +164,6 @@ Screen.ClipsDescendants = true
 Screen.Parent = Body
 Instance.new("UICorner", Screen).CornerRadius = UDim.new(0, 34)
 
--- OFF
 local OffLayer = Instance.new("Frame", Screen)
 OffLayer.Size = UDim2.new(1,0,1,0)
 OffLayer.BackgroundColor3 = Color3.fromRGB(0,0,0)
@@ -191,7 +171,6 @@ OffLayer.BorderSizePixel = 0
 OffLayer.Visible = false
 OffLayer.ZIndex = 50
 Instance.new("UICorner", OffLayer).CornerRadius = UDim.new(0, 34)
-
 local OffHint = Instance.new("TextLabel", OffLayer)
 OffHint.AnchorPoint = Vector2.new(0.5,0.5)
 OffHint.Position = UDim2.new(0.5,0,0.5,0)
@@ -202,7 +181,6 @@ OffHint.TextColor3 = Color3.fromRGB(50,70,60)
 OffHint.Font = Enum.Font.Gotham
 OffHint.TextSize = 16
 
--- BOOT
 local BootLayer = Instance.new("Frame", Screen)
 BootLayer.Size = UDim2.new(1,0,1,0)
 BootLayer.BackgroundColor3 = Color3.fromRGB(0,0,0)
@@ -227,7 +205,7 @@ bootSub.AnchorPoint = Vector2.new(0.5,0.5)
 bootSub.Position = UDim2.new(0.5,0,0.42,84)
 bootSub.Size = UDim2.new(1,0,0,24)
 bootSub.BackgroundTransparency = 1
-bootSub.Text = "os v5.1 • by Bean & Jack"
+bootSub.Text = "os v5.7 • by Bean & Jack"
 bootSub.TextColor3 = Color3.fromRGB(120,180,150)
 bootSub.Font = Enum.Font.Gotham
 bootSub.TextSize = 14
@@ -247,7 +225,6 @@ bootBarFill.BorderSizePixel = 0
 Instance.new("UICorner", bootBarFill).CornerRadius = UDim.new(1,0)
 registerTheme(bootBarFill, "bg")
 
--- DESKTOP
 local Desktop = Instance.new("Frame", Screen)
 Desktop.Size = UDim2.new(1,0,1,0)
 Desktop.BackgroundTransparency = 1
@@ -259,7 +236,6 @@ wp.BackgroundColor3 = Color3.fromRGB(6,10,8)
 wp.BorderSizePixel = 0
 local wpGrad = Instance.new("UIGradient", wp)
 wpGrad.Rotation = 135
-
 local function applyWallpaper()
     local W = WALLPAPERS[_G.KaliAiPad.settings.wallpaper] or WALLPAPERS[1]
     wpGrad.Color = ColorSequence.new{
@@ -270,23 +246,18 @@ local function applyWallpaper()
 end
 applyWallpaper()
 
--- BRIGHTNESS overlay — ИСПРАВЛЕНО
 local BrightOverlay = Instance.new("Frame", Desktop)
 BrightOverlay.Size = UDim2.new(1,0,1,0)
 BrightOverlay.BackgroundColor3 = Color3.fromRGB(0,0,0)
 BrightOverlay.BorderSizePixel = 0
 BrightOverlay.ZIndex = 60
 BrightOverlay.Active = false
-
 local function applyBrightness()
     local b = math.clamp(_G.KaliAiPad.settings.brightness / 100, 0, 1)
-    -- b=1 (100%) → transparency=1 → невидимый overlay = максимально ярко
-    -- b=0.3 (30%) → transparency=0.3 → 70% чёрного = темно
     BrightOverlay.BackgroundTransparency = b
 end
 applyBrightness()
 
--- STATUS BAR
 local StatusBar = Instance.new("Frame", Desktop)
 StatusBar.Size = UDim2.new(1,0,0,40)
 StatusBar.BackgroundTransparency = 1
@@ -320,7 +291,6 @@ bf.BorderSizePixel = 0
 Instance.new("UICorner", bf).CornerRadius = UDim.new(0,2)
 registerTheme(bf, "bg")
 
--- MAIN
 local MainScreen = Instance.new("Frame", Desktop)
 MainScreen.Position = UDim2.new(0,0,0,40)
 MainScreen.Size = UDim2.new(1,0,1,-40)
@@ -344,14 +314,13 @@ local SubHeader = Instance.new("TextLabel", LeftPanel)
 SubHeader.Position = UDim2.new(0,28,0,54)
 SubHeader.Size = UDim2.new(1,-52,0,20)
 SubHeader.BackgroundTransparency = 1
-SubHeader.Text = "os v5.1 • by Bean & Jack"
+SubHeader.Text = "os v5.7 • by Bean & Jack"
 SubHeader.TextColor3 = accent()
 SubHeader.Font = Enum.Font.Gotham
 SubHeader.TextSize = 13
 SubHeader.TextXAlignment = Enum.TextXAlignment.Left
 registerTheme(SubHeader, "text")
 
--- GRID
 local GridScroll = Instance.new("ScrollingFrame", LeftPanel)
 GridScroll.Position = UDim2.new(0,20,0,92)
 GridScroll.Size = UDim2.new(1,-40,1,-240)
@@ -425,7 +394,6 @@ local function makeApp(name, icon, color, cb)
     return App
 end
 
--- DOCK
 local Dock = Instance.new("Frame", LeftPanel)
 Dock.AnchorPoint = Vector2.new(0.5,1)
 Dock.Position = UDim2.new(0.5,0,1,-16)
@@ -458,7 +426,6 @@ local function makeDockApp(glyph, color, cb)
     b.MouseButton1Click:Connect(function() playClick() if cb then cb() end end)
 end
 
--- RIGHT PANEL
 local RightPanel = Instance.new("Frame", MainScreen)
 RightPanel.AnchorPoint = Vector2.new(1,0)
 RightPanel.Position = UDim2.new(1,0,0,0)
@@ -542,13 +509,196 @@ local function makeCard(parent, height, order)
     return card
 end
 
--- ===== ФУНКЦИИ ХАКА =====
+-- ============================================
+-- FLING v4 — BYPASS ANTI-FLING (SkidFling через коллизию)
+-- ============================================
+-- Работает даже если у цели включён Anti-Fling потому что:
+-- мы не даём ей BodyMover — мы сами вбиваемся в неё физикой
+-- У жертвы на HRP ничего лишнего не появляется → её анти-флинг не срабатывает
+local OldFPDH = workspace.FallenPartsDestroyHeight
+local flinging = {}
+
+local function SkidFling(TargetPlayer)
+    if not TargetPlayer then return end
+    if TargetPlayer == LP then return end
+    if flinging[TargetPlayer] then return end
+    flinging[TargetPlayer] = true
+    
+    local Character = LP.Character
+    if not Character then flinging[TargetPlayer] = nil return end
+    local Humanoid = Character:FindFirstChildOfClass("Humanoid")
+    local RootPart = Humanoid and Humanoid.RootPart
+    local TCharacter = TargetPlayer.Character
+    if not (Humanoid and RootPart and TCharacter) then flinging[TargetPlayer] = nil return end
+    
+    local THumanoid = TCharacter:FindFirstChildOfClass("Humanoid")
+    if not THumanoid then flinging[TargetPlayer] = nil return end
+    local TRootPart = THumanoid.RootPart
+    local THead = TCharacter:FindFirstChild("Head")
+    local Accessory = TCharacter:FindFirstChildOfClass("Accessory")
+    local AccessoryHandle = Accessory and Accessory:FindFirstChild("Handle")
+    
+    if THumanoid.Sit then flinging[TargetPlayer] = nil return end
+    if not TCharacter:FindFirstChildWhichIsA("BasePart") then flinging[TargetPlayer] = nil return end
+    
+    local OldPos = RootPart.CFrame
+    
+    local function FPos(BasePart, Pos, Ang)
+        if not RootPart or not RootPart.Parent then return end
+        if not Character or not Character.Parent then return end
+        RootPart.CFrame = CFrame.new(BasePart.Position) * Pos * Ang
+        pcall(function() Character:SetPrimaryPartCFrame(CFrame.new(BasePart.Position) * Pos * Ang) end)
+        RootPart.Velocity = Vector3.new(9e7, 9e7 * 10, 9e7)
+        RootPart.RotVelocity = Vector3.new(9e8, 9e8, 9e8)
+    end
+    
+    local function SFBasePart(BasePart)
+        local TimeToWait = 0.4
+        local Start = tick()
+        local Angle = 0
+        repeat
+            if not (RootPart and RootPart.Parent) then break end
+            if not THumanoid or not THumanoid.Parent then break end
+            if BasePart.Velocity.Magnitude < 50 then
+                Angle = Angle + 100
+                FPos(BasePart, CFrame.new(0, 1.5, 0) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
+                task.wait()
+                FPos(BasePart, CFrame.new(0, -1.5, 0) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
+                task.wait()
+            else
+                FPos(BasePart, CFrame.new(0, 1.5, THumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
+                task.wait()
+                FPos(BasePart, CFrame.new(0, -1.5, -THumanoid.WalkSpeed), CFrame.Angles(0, 0, 0))
+                task.wait()
+            end
+        until (tick() - Start > TimeToWait)
+    end
+    
+    local prevFPDH = workspace.FallenPartsDestroyHeight
+    pcall(function() workspace.FallenPartsDestroyHeight = 0/0 end)
+    
+    local BV = Instance.new("BodyVelocity")
+    BV.Parent = RootPart
+    BV.Velocity = Vector3.new(0, 0, 0)
+    BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+    
+    pcall(function() Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false) end)
+    
+    if TRootPart then SFBasePart(TRootPart)
+    elseif THead then SFBasePart(THead)
+    elseif AccessoryHandle then SFBasePart(AccessoryHandle) end
+    
+    if BV then BV:Destroy() end
+    pcall(function() Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true) end)
+    
+    -- Возвращаем себя на место
+    if RootPart and RootPart.Parent and Character and Character.Parent then
+        local sStart = tick()
+        repeat
+            if not RootPart or not RootPart.Parent then break end
+            RootPart.CFrame = OldPos * CFrame.new(0, .5, 0)
+            pcall(function() Character:SetPrimaryPartCFrame(OldPos * CFrame.new(0, .5, 0)) end)
+            pcall(function() Humanoid:ChangeState("GettingUp") end)
+            for _, part in pairs(Character:GetChildren()) do
+                if part:IsA("BasePart") then
+                    part.Velocity, part.RotVelocity = Vector3.new(), Vector3.new()
+                end
+            end
+            task.wait()
+        until (RootPart.Position - OldPos.p).Magnitude < 25 or (tick() - sStart > 1.5)
+    end
+    pcall(function() workspace.FallenPartsDestroyHeight = prevFPDH end)
+    
+    task.wait(0.3)
+    flinging[TargetPlayer] = nil
+end
+
+-- Touch Fling Aura — при касании близко (< 4 стадов)
+local flingAuraConn
+local function applyFlingAura(on)
+    if on then
+        flingAuraConn = RunService.Heartbeat:Connect(function()
+            local c = LP.Character
+            if not c then return end
+            local hrp = c:FindFirstChild("HumanoidRootPart")
+            if not hrp then return end
+            for _, plr in ipairs(Players:GetPlayers()) do
+                if plr ~= LP and plr.Character and plr.Character ~= c then
+                    local tHRP = plr.Character:FindFirstChild("HumanoidRootPart")
+                    if tHRP then
+                        local d = (tHRP.Position - hrp.Position).Magnitude
+                        -- КАСАНИЕ: ближе 4 стадов
+                        if d < 4 then
+                            task.spawn(function() pcall(SkidFling, plr) end)
+                        end
+                    end
+                end
+            end
+        end)
+    else
+        if flingAuraConn then flingAuraConn:Disconnect() flingAuraConn=nil end
+    end
+end
+
+-- Fling Normal Aura — расширенная (до 8 стадов) для тех кто анти-флинг
+local flingNormalConn
+local function applyFlingNormal(on)
+    if on then
+        flingNormalConn = RunService.Heartbeat:Connect(function()
+            local c = LP.Character
+            if not c then return end
+            local hrp = c:FindFirstChild("HumanoidRootPart")
+            if not hrp then return end
+            for _, plr in ipairs(Players:GetPlayers()) do
+                if plr ~= LP and plr.Character and plr.Character ~= c then
+                    local tHRP = plr.Character:FindFirstChild("HumanoidRootPart")
+                    if tHRP then
+                        local d = (tHRP.Position - hrp.Position).Magnitude
+                        if d < 8 then
+                            task.spawn(function() pcall(SkidFling, plr) end)
+                        end
+                    end
+                end
+            end
+        end)
+    else
+        if flingNormalConn then flingNormalConn:Disconnect() flingNormalConn=nil end
+    end
+end
+
+local function flingNearest()
+    local c = LP.Character
+    if not c then return end
+    local hrp = c:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    local nearest, dist = nil, math.huge
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LP and plr.Character and plr.Character ~= c then
+            local tHRP = plr.Character:FindFirstChild("HumanoidRootPart")
+            if tHRP then
+                local d = (tHRP.Position - hrp.Position).Magnitude
+                if d < dist then dist = d nearest = plr end
+            end
+        end
+    end
+    if nearest then task.spawn(function() pcall(SkidFling, nearest) end) end
+end
+
+local function flingAll()
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LP and plr.Character and plr.Character ~= LP.Character then
+            task.spawn(function() pcall(SkidFling, plr) end)
+            task.wait(0.2)
+        end
+    end
+end
+
+-- ===== ОСТАЛЬНЫЕ ФУНКЦИИ =====
 local functionRegistry = {}
 local keybinds = {}
 local awaitingBind = nil
 _G.KaliAiPad.registry = functionRegistry
 
--- FLY
 local flyState = {vel=nil, gyro=nil, conn=nil}
 local function applyFly(on)
     local c = LP.Character
@@ -559,9 +709,11 @@ local function applyFly(on)
     if on then
         hum.PlatformStand = true
         local v = Instance.new("BodyVelocity", hrp)
+        v.Name = "KaliFlyVel"
         v.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
         v.Velocity = Vector3.new(0,0,0)
         local g = Instance.new("BodyGyro", hrp)
+        g.Name = "KaliFlyGyro"
         g.MaxTorque = Vector3.new(math.huge,math.huge,math.huge)
         g.P = 1000
         g.CFrame = hrp.CFrame
@@ -777,6 +929,49 @@ local function applyInfiniteYield(on)
     end
 end
 
+local antiFlingConn
+local function applyAntiFling(on)
+    if on then
+        antiFlingConn = RunService.Stepped:Connect(function()
+            local c = LP.Character
+            if not c then return end
+            local hrp = c:FindFirstChild("HumanoidRootPart")
+            if not hrp then return end
+            for _, v in ipairs(hrp:GetChildren()) do
+                if v:IsA("BodyVelocity") or v:IsA("BodyAngularVelocity") 
+                   or v:IsA("BodyGyro") or v:IsA("BodyThrust") 
+                   or v:IsA("BodyForce") or v:IsA("BodyPosition") then
+                    if v.Name ~= "KaliFlyVel" and v.Name ~= "KaliFlyGyro" then
+                        pcall(function() v:Destroy() end)
+                    end
+                end
+            end
+            if hrp.AssemblyLinearVelocity.Magnitude > 80 then
+                hrp.AssemblyLinearVelocity = Vector3.new(0, hrp.AssemblyLinearVelocity.Y * 0.1, 0)
+            end
+            if hrp.AssemblyAngularVelocity.Magnitude > 30 then
+                hrp.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+            end
+            local hum = c:FindFirstChildOfClass("Humanoid")
+            if hum then
+                if hum.PlatformStand then
+                    local flyEntry = functionRegistry["fly"]
+                    if not (flyEntry and flyEntry.enabled) then
+                        hum.PlatformStand = false
+                    end
+                end
+                if hum:GetState() == Enum.HumanoidStateType.Physics then
+                    hum:ChangeState(Enum.HumanoidStateType.GettingUp)
+                end
+                if hum.WalkSpeed < 1 then hum.WalkSpeed = 16 end
+                if hum.JumpPower < 1 then hum.JumpPower = 50 end
+            end
+        end)
+    else
+        if antiFlingConn then antiFlingConn:Disconnect() antiFlingConn=nil end
+    end
+end
+
 local function teleportAllToMe()
     local c = LP.Character
     if not c then return end
@@ -787,29 +982,6 @@ local function teleportAllToMe()
             local tHRP = plr.Character:FindFirstChild("HumanoidRootPart")
             if tHRP then tHRP.CFrame = hrp.CFrame * CFrame.new(0,0,-4) end
         end
-    end
-end
-
-local function flingNearest()
-    local c = LP.Character
-    if not c then return end
-    local hrp = c:FindFirstChild("HumanoidRootPart")
-    if not hrp then return end
-    local nearest, dist = nil, math.huge
-    for _, plr in ipairs(Players:GetPlayers()) do
-        if plr ~= LP and plr.Character then
-            local tHRP = plr.Character:FindFirstChild("HumanoidRootPart")
-            if tHRP then
-                local d = (tHRP.Position - hrp.Position).Magnitude
-                if d < dist then dist = d nearest = tHRP end
-            end
-        end
-    end
-    if nearest then
-        local bv = Instance.new("BodyVelocity", hrp)
-        bv.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
-        bv.Velocity = (nearest.Position - hrp.Position).Unit * 500
-        Debris:AddItem(bv, 0.2)
     end
 end
 
@@ -830,6 +1002,9 @@ registerFn("autofarm", "Auto Farm", "сбор предметов", "🌾", apply
 registerFn("aura", "Kill Aura", "убить в радиусе", "💀", applyAura)
 registerFn("invisible", "Invisible", "невидимость", "👻", applyInvisible)
 registerFn("yield", "Infinite Yield", "физ. состояние", "🧲", applyInfiniteYield)
+registerFn("flingaura", "Touch Fling", "касание = отброс", "👆", applyFlingAura)
+registerFn("flingnormal", "Fling Radius 8", "отброс в радиусе 8", "🌀", applyFlingNormal)
+registerFn("antifling", "Anti-Fling", "защита от флинга", "🛡", applyAntiFling)
 
 local function teleport(target)
     local c = LP.Character
@@ -853,7 +1028,7 @@ local PowWin = makeWin("⏻ Power")
 -- BING HACK
 do
     local order = 0
-    local list = {"fly","speed","infjump","noclip","fullbright","god","antiafk","jump","esp","autofarm","aura","invisible","yield"}
+    local list = {"fly","speed","infjump","noclip","fullbright","god","antiafk","jump","esp","autofarm","aura","invisible","yield","flingaura","flingnormal","antifling"}
     for _, id in ipairs(list) do
         order = order + 1
         local entry = functionRegistry[id]
@@ -940,7 +1115,7 @@ Instance.new("UICorner", tpHeader).CornerRadius = UDim.new(0,10)
 local tpH = Instance.new("TextLabel", tpHeader)
 tpH.Size = UDim2.new(1,0,1,0)
 tpH.BackgroundTransparency = 1
-tpH.Text = "  ▾  TELEPORT TO PLAYER"
+tpH.Text = "  ▾  TELEPORT / FLING TO PLAYER"
 tpH.TextColor3 = accent()
 tpH.Font = Enum.Font.GothamBold
 tpH.TextSize = 13
@@ -973,13 +1148,31 @@ local function refreshPlayers()
 
             local n = Instance.new("TextLabel", row)
             n.Position = UDim2.new(0,54,0,0)
-            n.Size = UDim2.new(0.55,0,1,0)
+            n.Size = UDim2.new(0.4,0,1,0)
             n.BackgroundTransparency = 1
             n.Text = plr.DisplayName .. "  @" .. plr.Name
             n.TextColor3 = Color3.fromRGB(230,255,240)
             n.Font = Enum.Font.GothamMedium
-            n.TextSize = 13
+            n.TextSize = 12
             n.TextXAlignment = Enum.TextXAlignment.Left
+
+            local flingBtn = Instance.new("TextButton", row)
+            flingBtn.AnchorPoint = Vector2.new(1,0.5)
+            flingBtn.Position = UDim2.new(1,-94,0.5,0)
+            flingBtn.Size = UDim2.new(0,76,0,32)
+            flingBtn.BackgroundColor3 = Color3.fromRGB(180,40,40)
+            flingBtn.Text = "FLING"
+            flingBtn.TextColor3 = Color3.fromRGB(255,255,255)
+            flingBtn.Font = Enum.Font.GothamBold
+            flingBtn.TextSize = 12
+            flingBtn.BorderSizePixel = 0
+            Instance.new("UICorner", flingBtn).CornerRadius = UDim.new(0,10)
+            flingBtn.MouseButton1Click:Connect(function()
+                playClick()
+                if plr.Character and plr.Character ~= LP.Character then
+                    task.spawn(function() pcall(SkidFling, plr) end)
+                end
+            end)
 
             local tpB = Instance.new("TextButton", row)
             tpB.AnchorPoint = Vector2.new(1,0.5)
@@ -998,7 +1191,6 @@ local function refreshPlayers()
     end
 end
 
--- ACTIONS
 local actionsHeader = Instance.new("Frame", hScroll)
 actionsHeader.Size = UDim2.new(1,-10,0,44)
 actionsHeader.BackgroundColor3 = Color3.fromRGB(15,22,18)
@@ -1017,7 +1209,7 @@ aH.TextXAlignment = Enum.TextXAlignment.Left
 registerTheme(aH, "text")
 
 local actionsFrame = Instance.new("Frame", hScroll)
-actionsFrame.Size = UDim2.new(1,-10,0,180)
+actionsFrame.Size = UDim2.new(1,-10,0,230)
 actionsFrame.BackgroundTransparency = 1
 actionsFrame.LayoutOrder = 4
 local actL = Instance.new("UIListLayout", actionsFrame)
@@ -1037,7 +1229,8 @@ local function makeActionBtn(text, cb)
 end
 
 makeActionBtn("📡  TP All To Me", teleportAllToMe)
-makeActionBtn("💥  Fling Nearest", flingNearest)
+makeActionBtn("🌀  FLING Nearest", flingNearest)
+makeActionBtn("💥  FLING ALL", flingAll)
 makeActionBtn("🌐  Rejoin Server", function()
     pcall(function()
         game:GetService("TeleportService"):Teleport(game.PlaceId, LP)
@@ -1051,8 +1244,6 @@ end)
 -- SETTINGS
 do
     local setOrd = 0
-
-    -- ACCENT
     setOrd = setOrd + 1
     local accCard = makeCard(setScroll, 90, setOrd)
     local accLbl = Instance.new("TextLabel", accCard)
@@ -1066,10 +1257,8 @@ do
     accLbl.TextXAlignment = Enum.TextXAlignment.Left
 
     local PALETTE = {
-        {0,255,150}, {0,180,255}, {255,80,180},
-        {255,180,0}, {180,80,255}, {255,80,80},
-        {80,255,255}, {255,255,255},
-        {255,50,50}, {50,255,50},
+        {0,255,150}, {0,180,255}, {255,80,180}, {255,180,0}, {180,80,255},
+        {255,80,80}, {80,255,255}, {255,255,255}, {255,50,50}, {50,255,50},
     }
     local accRow = Instance.new("Frame", accCard)
     accRow.Position = UDim2.new(0,14,0,40)
@@ -1093,7 +1282,6 @@ do
         end)
     end
 
-    -- WALLPAPER
     setOrd = setOrd + 1
     local wpCard = makeCard(setScroll, 80, setOrd)
     local wpLbl = Instance.new("TextLabel", wpCard)
@@ -1133,7 +1321,6 @@ do
         end)
     end
 
-    -- BRIGHTNESS
     setOrd = setOrd + 1
     local brCard = makeCard(setScroll, 66, setOrd)
     local brLbl = Instance.new("TextLabel", brCard)
@@ -1212,7 +1399,6 @@ do
         end
     end)
 
-    -- TRANSPARENCY
     setOrd = setOrd + 1
     local trCard = makeCard(setScroll, 66, setOrd)
     local trLbl = Instance.new("TextLabel", trCard)
@@ -1293,7 +1479,6 @@ do
         end
     end)
 
-    -- CLICK SOUND
     setOrd = setOrd + 1
     local sndCard = makeCard(setScroll, 58, setOrd)
     local sndLbl = Instance.new("TextLabel", sndCard)
@@ -1305,16 +1490,6 @@ do
     sndLbl.Font = Enum.Font.GothamBold
     sndLbl.TextSize = 14
     sndLbl.TextXAlignment = Enum.TextXAlignment.Left
-
-    local sndD = Instance.new("TextLabel", sndCard)
-    sndD.Position = UDim2.new(0,14,0,28)
-    sndD.Size = UDim2.new(0.7,0,0,18)
-    sndD.BackgroundTransparency = 1
-    sndD.Text = "тихий щелчок на кнопках"
-    sndD.TextColor3 = Color3.fromRGB(150,170,160)
-    sndD.Font = Enum.Font.Gotham
-    sndD.TextSize = 11
-    sndD.TextXAlignment = Enum.TextXAlignment.Left
 
     local sndTr = Instance.new("Frame", sndCard)
     sndTr.AnchorPoint = Vector2.new(1,0.5)
@@ -1631,7 +1806,6 @@ makeDockApp("🎯", Color3.fromRGB(0,150,90), function() closeAllWins(BingWin) B
 makeDockApp("⚡", Color3.fromRGB(90,130,60), function() closeAllWins(HackWin) refreshPlayers() HackWin.Visible = true end)
 makeDockApp("⚙", Color3.fromRGB(90,90,100), function() closeAllWins(SetWin) SetWin.Visible = true end)
 
--- HOME BAR
 local homeBar = Instance.new("TextButton", Desktop)
 homeBar.AnchorPoint = Vector2.new(0.5,1)
 homeBar.Position = UDim2.new(0.5,0,1,-6)
@@ -1643,7 +1817,6 @@ homeBar.BorderSizePixel = 0
 Instance.new("UICorner", homeBar).CornerRadius = UDim.new(1,0)
 homeBar.MouseButton1Click:Connect(function() playClick() ScreenGui.Enabled = false end)
 
--- DRAG
 local dragging, dragStart, startPos
 StatusBar.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -1664,7 +1837,6 @@ UIS.InputChanged:Connect(function(input)
     end
 end)
 
--- KEY HANDLER
 UIS.InputBegan:Connect(function(input, gpe)
     if gpe then return end
     if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
@@ -1696,7 +1868,6 @@ UIS.InputBegan:Connect(function(input, gpe)
     end
 end)
 
--- EQUIP
 Tool.Equipped:Connect(function()
     ScreenGui.Enabled = true
     playClick()
@@ -1705,13 +1876,11 @@ Tool.Unequipped:Connect(function()
     ScreenGui.Enabled = false
 end)
 
--- APPLY
 applyTheme()
 
--- SHOW
 ScreenGui.Enabled = true
 Desktop.Visible = true
 OffLayer.Visible = false
 BootLayer.Visible = false
 
-print("[Kali] ✅ v5.1 DONE — brightness fix, всё должно работать")
+print("[Kali] ✅ v5.7 DONE — Touch-Fling BYPASS antifling")
