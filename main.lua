@@ -1,4 +1,4 @@
--- // Kali AiPad OS // v5.9 // executor // TikTok mini-serials
+-- // Kali AiPad OS // v6.0 // executor // TikTok PRO + fixed sounds
 print("[Kali] start")
 
 local Players = game:GetService("Players")
@@ -9,27 +9,18 @@ local RunService = game:GetService("RunService")
 local Lighting = game:GetService("Lighting")
 local VirtualUser = game:GetService("VirtualUser")
 local Debris = game:GetService("Debris")
-local SoundService = game:GetService("SoundService")
 
 -- CLEANUP
 local PG = LP:WaitForChild("PlayerGui")
 for _, v in ipairs(PG:GetChildren()) do
-    if v.Name == "KaliAiPadOS" or v.Name == "KaliAiPadUI" or v.Name == "KaliInventory" then
-        v:Destroy()
-    end
+    if v.Name == "KaliAiPadOS" or v.Name == "KaliAiPadUI" or v.Name == "KaliInventory" then v:Destroy() end
 end
 for _, v in ipairs(LP.Backpack:GetChildren()) do if v.Name == "Kali Ai Pad" then v:Destroy() end end
-if LP.Character then
-    for _, v in ipairs(LP.Character:GetChildren()) do
-        if v.Name == "Kali Ai Pad" then v:Destroy() end
-    end
-end
+if LP.Character then for _, v in ipairs(LP.Character:GetChildren()) do if v.Name == "Kali Ai Pad" then v:Destroy() end end end
 
 -- STATE
 _G.KaliAiPad = _G.KaliAiPad or {}
-_G.KaliAiPad.settings = _G.KaliAiPad.settings or {
-    accent = {0,255,150}, wallpaper = 1, brightness = 100, transparency = 10, clickSound = true,
-}
+_G.KaliAiPad.settings = _G.KaliAiPad.settings or { accent = {0,255,150}, wallpaper = 1, brightness = 100, transparency = 10, clickSound = true }
 _G.KaliAiPad.binds = _G.KaliAiPad.binds or {}
 _G.KaliAiPad.positions = _G.KaliAiPad.positions or {}
 _G.KaliAiPad.powered = true
@@ -49,8 +40,7 @@ local function applyTheme()
                 if item.kind == "text" then item.element.TextColor3 = col
                 elseif item.kind == "bg" then item.element.BackgroundColor3 = col
                 elseif item.kind == "stroke" then item.element.Color = col
-                elseif item.kind == "scroll" then item.element.ScrollBarImageColor3 = col
-                end
+                elseif item.kind == "scroll" then item.element.ScrollBarImageColor3 = col end
             end)
         end
     end
@@ -65,7 +55,7 @@ local WALLPAPERS = {
 
 -- TOOL
 local Tool = Instance.new("Tool")
-Tool.Name = "Kali AiPad"
+Tool.Name = "Kali Ai Pad"
 Tool.RequiresHandle = true
 Tool.CanBeDropped = false
 local Handle = Instance.new("Part")
@@ -83,7 +73,8 @@ ScreenPart.CanCollide = false
 ScreenPart.Massless = true
 ScreenPart.Parent = Tool
 local w1 = Instance.new("WeldConstraint", Handle)
-w1.Part0 = Handle w1.Part1 = ScreenPart
+w1.Part0 = Handle
+w1.Part1 = ScreenPart
 Tool.Parent = LP.Backpack
 
 -- GUI
@@ -95,13 +86,17 @@ ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.Enabled = true
 ScreenGui.Parent = PG
 
+-- ЗВУК КЛИКА (безопасно)
+local CLICK_SOUND_ID = "rbxassetid://9125402735"
+local VIDEO_SOUND_ID = "rbxassetid://131237243"
+
 local function playClick()
     if not _G.KaliAiPad.settings.clickSound then return end
     local s = Instance.new("Sound")
-    s.SoundId = "rbxassetid://9125402735"
+    s.SoundId = CLICK_SOUND_ID
     s.Volume = 0.3
     s.Parent = ScreenGui
-    s:Play()
+    pcall(function() s:Play() end)
     Debris:AddItem(s, 1)
 end
 
@@ -172,6 +167,7 @@ OffLayer.BorderSizePixel = 0
 OffLayer.Visible = false
 OffLayer.ZIndex = 50
 Instance.new("UICorner", OffLayer).CornerRadius = UDim.new(0, 34)
+
 local OffHint = Instance.new("TextLabel", OffLayer)
 OffHint.AnchorPoint = Vector2.new(0.5,0.5)
 OffHint.Position = UDim2.new(0.5,0,0.5,0)
@@ -206,7 +202,7 @@ bootSub.AnchorPoint = Vector2.new(0.5,0.5)
 bootSub.Position = UDim2.new(0.5,0,0.42,84)
 bootSub.Size = UDim2.new(1,0,0,24)
 bootSub.BackgroundTransparency = 1
-bootSub.Text = "os v5.9 • by Bean & Jack"
+bootSub.Text = "os v6.0 • by Bean & Jack"
 bootSub.TextColor3 = Color3.fromRGB(120,180,150)
 bootSub.Font = Enum.Font.Gotham
 bootSub.TextSize = 14
@@ -315,7 +311,7 @@ local SubHeader = Instance.new("TextLabel", LeftPanel)
 SubHeader.Position = UDim2.new(0,28,0,54)
 SubHeader.Size = UDim2.new(1,-52,0,20)
 SubHeader.BackgroundTransparency = 1
-SubHeader.Text = "os v5.9 • by Bean & Jack"
+SubHeader.Text = "os v6.0 • by Bean & Jack"
 SubHeader.TextColor3 = accent()
 SubHeader.Font = Enum.Font.Gotham
 SubHeader.TextSize = 13
@@ -356,7 +352,6 @@ local function makeApp(name, icon, color, cb)
     Icon.BackgroundColor3 = color
     Icon.BorderSizePixel = 0
     Instance.new("UICorner", Icon).CornerRadius = UDim.new(0, 22)
-
     local ig = Instance.new("UIGradient", Icon)
     ig.Rotation = 135
     ig.Color = ColorSequence.new{
@@ -367,7 +362,6 @@ local function makeApp(name, icon, color, cb)
         NumberSequenceKeypoint.new(0, 0.75),
         NumberSequenceKeypoint.new(1, 0.95),
     }
-
     local g = Instance.new("TextLabel", Icon)
     g.Size = UDim2.new(1,0,1,0)
     g.BackgroundTransparency = 1
@@ -375,7 +369,6 @@ local function makeApp(name, icon, color, cb)
     g.TextColor3 = Color3.fromRGB(255,255,255)
     g.Font = Enum.Font.GothamBold
     g.TextSize = 40
-
     local L = Instance.new("TextLabel", App)
     L.Position = UDim2.new(0,0,0,96)
     L.Size = UDim2.new(1,0,0,18)
@@ -461,7 +454,7 @@ local function makeWin(title)
 
     local t = Instance.new("TextLabel", Win)
     t.Position = UDim2.new(0,18,0,8)
-    t.Size = UDim2.new(0.78,0,0,44)
+    t.Size = UDim2.new(1,-60,0,44)
     t.BackgroundTransparency = 1
     t.Text = title
     t.TextColor3 = Color3.fromRGB(255,255,255)
@@ -511,36 +504,26 @@ local function makeCard(parent, height, order)
 end
 
 -- ============================================
--- FLING v4
+-- FLING (SkidFling)
 -- ============================================
-local OldFPDH = workspace.FallenPartsDestroyHeight
 local flinging = {}
-
 local function SkidFling(TargetPlayer)
-    if not TargetPlayer then return end
-    if TargetPlayer == LP then return end
+    if not TargetPlayer or TargetPlayer == LP then return end
     if flinging[TargetPlayer] then return end
     flinging[TargetPlayer] = true
-    
     local Character = LP.Character
     if not Character then flinging[TargetPlayer] = nil return end
     local Humanoid = Character:FindFirstChildOfClass("Humanoid")
     local RootPart = Humanoid and Humanoid.RootPart
     local TCharacter = TargetPlayer.Character
     if not (Humanoid and RootPart and TCharacter) then flinging[TargetPlayer] = nil return end
-    
     local THumanoid = TCharacter:FindFirstChildOfClass("Humanoid")
     if not THumanoid then flinging[TargetPlayer] = nil return end
     local TRootPart = THumanoid.RootPart
     local THead = TCharacter:FindFirstChild("Head")
-    local Accessory = TCharacter:FindFirstChildOfClass("Accessory")
-    local AccessoryHandle = Accessory and Accessory:FindFirstChild("Handle")
-    
     if THumanoid.Sit then flinging[TargetPlayer] = nil return end
     if not TCharacter:FindFirstChildWhichIsA("BasePart") then flinging[TargetPlayer] = nil return end
-    
     local OldPos = RootPart.CFrame
-    
     local function FPos(BasePart, Pos, Ang)
         if not RootPart or not RootPart.Parent then return end
         if not Character or not Character.Parent then return end
@@ -549,7 +532,6 @@ local function SkidFling(TargetPlayer)
         RootPart.Velocity = Vector3.new(9e7, 9e7 * 10, 9e7)
         RootPart.RotVelocity = Vector3.new(9e8, 9e8, 9e8)
     end
-    
     local function SFBasePart(BasePart)
         local TimeToWait = 0.4
         local Start = tick()
@@ -571,24 +553,17 @@ local function SkidFling(TargetPlayer)
             end
         until (tick() - Start > TimeToWait)
     end
-    
     local prevFPDH = workspace.FallenPartsDestroyHeight
     pcall(function() workspace.FallenPartsDestroyHeight = 0/0 end)
-    
     local BV = Instance.new("BodyVelocity")
     BV.Parent = RootPart
     BV.Velocity = Vector3.new(0, 0, 0)
     BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
-    
     pcall(function() Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false) end)
-    
     if TRootPart then SFBasePart(TRootPart)
-    elseif THead then SFBasePart(THead)
-    elseif AccessoryHandle then SFBasePart(AccessoryHandle) end
-    
+    elseif THead then SFBasePart(THead) end
     if BV then BV:Destroy() end
     pcall(function() Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true) end)
-    
     if RootPart and RootPart.Parent and Character and Character.Parent then
         local sStart = tick()
         repeat
@@ -597,94 +572,86 @@ local function SkidFling(TargetPlayer)
             pcall(function() Character:SetPrimaryPartCFrame(OldPos * CFrame.new(0, .5, 0)) end)
             pcall(function() Humanoid:ChangeState("GettingUp") end)
             for _, part in pairs(Character:GetChildren()) do
-                if part:IsA("BasePart") then
-                    part.Velocity, part.RotVelocity = Vector3.new(), Vector3.new()
-                end
+                if part:IsA("BasePart") then part.Velocity, part.RotVelocity = Vector3.new(), Vector3.new() end
             end
             task.wait()
         until (RootPart.Position - OldPos.p).Magnitude < 25 or (tick() - sStart > 1.5)
     end
     pcall(function() workspace.FallenPartsDestroyHeight = prevFPDH end)
-    
     task.wait(0.3)
     flinging[TargetPlayer] = nil
 end
 
-local flingAuraConn
-local function applyFlingAura(on)
-    if on then
-        flingAuraConn = RunService.Heartbeat:Connect(function()
-            local c = LP.Character
-            if not c then return end
-            local hrp = c:FindFirstChild("HumanoidRootPart")
-            if not hrp then return end
-            for _, plr in ipairs(Players:GetPlayers()) do
-                if plr ~= LP and plr.Character and plr.Character ~= c then
-                    local tHRP = plr.Character:FindFirstChild("HumanoidRootPart")
-                    if tHRP then
-                        local d = (tHRP.Position - hrp.Position).Magnitude
-                        if d < 4 then
-                            task.spawn(function() pcall(SkidFling, plr) end)
-                        end
-                    end
-                end
-            end
-        end)
-    else
-        if flingAuraConn then flingAuraConn:Disconnect() flingAuraConn=nil end
-    end
-end
-
-local flingNormalConn
-local function applyFlingNormal(on)
-    if on then
-        flingNormalConn = RunService.Heartbeat:Connect(function()
-            local c = LP.Character
-            if not c then return end
-            local hrp = c:FindFirstChild("HumanoidRootPart")
-            if not hrp then return end
-            for _, plr in ipairs(Players:GetPlayers()) do
-                if plr ~= LP and plr.Character and plr.Character ~= c then
-                    local tHRP = plr.Character:FindFirstChild("HumanoidRootPart")
-                    if tHRP then
-                        local d = (tHRP.Position - hrp.Position).Magnitude
-                        if d < 8 then
-                            task.spawn(function() pcall(SkidFling, plr) end)
-                        end
-                    end
-                end
-            end
-        end)
-    else
-        if flingNormalConn then flingNormalConn:Disconnect() flingNormalConn=nil end
-    end
-end
-
-local function flingNearest()
+-- BOAT
+local function spawnBoat()
     local c = LP.Character
     if not c then return end
     local hrp = c:FindFirstChild("HumanoidRootPart")
     if not hrp then return end
-    local nearest, dist = nil, math.huge
-    for _, plr in ipairs(Players:GetPlayers()) do
-        if plr ~= LP and plr.Character and plr.Character ~= c then
-            local tHRP = plr.Character:FindFirstChild("HumanoidRootPart")
-            if tHRP then
-                local d = (tHRP.Position - hrp.Position).Magnitude
-                if d < dist then dist = d nearest = plr end
+    local basePos = hrp.CFrame * CFrame.new(0, 0, -20)
+    local boatModel = Instance.new("Model")
+    boatModel.Name = "KaliBoat"
+    boatModel.Parent = workspace
+    local hull = Instance.new("Part")
+    hull.Size = Vector3.new(12, 3, 25)
+    hull.Position = basePos.Position
+    hull.Color = Color3.fromRGB(139, 69, 19)
+    hull.Material = Enum.Material.Wood
+    hull.Anchored = true
+    hull.Parent = boatModel
+    local deck = Instance.new("Part")
+    deck.Size = Vector3.new(11, 0.5, 23)
+    deck.Position = basePos.Position + Vector3.new(0, 2, 0)
+    deck.Color = Color3.fromRGB(180, 140, 100)
+    deck.Material = Enum.Material.WoodPlanks
+    deck.Anchored = true
+    deck.Parent = boatModel
+    local mast = Instance.new("Part")
+    mast.Size = Vector3.new(0.6, 15, 0.6)
+    mast.Position = basePos.Position + Vector3.new(0, 9, 0)
+    mast.Color = Color3.fromRGB(100, 60, 30)
+    mast.Anchored = true
+    mast.Parent = boatModel
+    local sail = Instance.new("Part")
+    sail.Size = Vector3.new(0.2, 10, 8)
+    sail.Position = basePos.Position + Vector3.new(0, 10, 0)
+    sail.Color = Color3.fromRGB(255, 255, 255)
+    sail.Material = Enum.Material.Fabric
+    sail.Anchored = true
+    sail.Parent = boatModel
+    local hum = c:FindFirstChildOfClass("Humanoid")
+    if hum and hum.RootPart then hum.RootPart.CFrame = deck.CFrame + Vector3.new(0, 3, 0) end
+end
+
+-- STEAL BRAINROT
+local function stealBrainrot()
+    local stolen = 0
+    local c = LP.Character
+    if not c then return end
+    local hrp = c:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("Model") or obj:IsA("BasePart") then
+            local n = obj.Name:lower()
+            if n:find("brainrot") or n:find("skibidi") or n:find("sigma") or n:find("rizz") then
+                pcall(function()
+                    if obj:IsA("Model") and obj.PrimaryPart then
+                        obj:PivotTo(hrp.CFrame * CFrame.new(math.random(-5,5), 3, math.random(-5,5)))
+                    elseif obj:IsA("BasePart") then
+                        obj.CFrame = hrp.CFrame * CFrame.new(math.random(-5,5), 3, math.random(-5,5))
+                    end
+                    stolen = stolen + 1
+                end)
             end
         end
     end
-    if nearest then task.spawn(function() pcall(SkidFling, nearest) end) end
-end
-
-local function flingAll()
-    for _, plr in ipairs(Players:GetPlayers()) do
-        if plr ~= LP and plr.Character and plr.Character ~= LP.Character then
-            task.spawn(function() pcall(SkidFling, plr) end)
-            task.wait(0.2)
-        end
-    end
+    pcall(function()
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Steal Brainrot",
+            Text = "украдено: " .. stolen .. " шт.",
+            Duration = 3,
+        })
+    end)
 end
 
 -- ===== ФУНКЦИИ =====
@@ -871,10 +838,8 @@ local function applyAura(on)
                 if plr ~= LP and plr.Character then
                     local tHum = plr.Character:FindFirstChildOfClass("Humanoid")
                     local tHRP = plr.Character:FindFirstChild("HumanoidRootPart")
-                    if tHum and tHRP then
-                        if (tHRP.Position - hrp.Position).Magnitude < 8 then
-                            tHum.Health = 0
-                        end
+                    if tHum and tHRP and (tHRP.Position - hrp.Position).Magnitude < 8 then
+                        tHum.Health = 0
                     end
                 end
             end
@@ -901,10 +866,7 @@ local function applyInvisible(on)
     else
         if invisConn then invisConn:Disconnect() invisConn=nil end
         for _, p in ipairs(c:GetDescendants()) do
-            if p:IsA("BasePart") then
-                if p.Name == "HumanoidRootPart" then p.Transparency = 1
-                else p.Transparency = 0 end
-            end
+            if p:IsA("BasePart") then p.Transparency = p.Name == "HumanoidRootPart" and 1 or 0 end
         end
     end
 end
@@ -932,9 +894,7 @@ local function applyAntiFling(on)
             local hrp = c:FindFirstChild("HumanoidRootPart")
             if not hrp then return end
             for _, v in ipairs(hrp:GetChildren()) do
-                if v:IsA("BodyVelocity") or v:IsA("BodyAngularVelocity") 
-                   or v:IsA("BodyGyro") or v:IsA("BodyThrust") 
-                   or v:IsA("BodyForce") or v:IsA("BodyPosition") then
+                if v:IsA("BodyVelocity") or v:IsA("BodyAngularVelocity") or v:IsA("BodyGyro") or v:IsA("BodyThrust") or v:IsA("BodyForce") or v:IsA("BodyPosition") then
                     if v.Name ~= "KaliFlyVel" and v.Name ~= "KaliFlyGyro" then
                         pcall(function() v:Destroy() end)
                     end
@@ -950,9 +910,7 @@ local function applyAntiFling(on)
             if hum then
                 if hum.PlatformStand then
                     local flyEntry = functionRegistry["fly"]
-                    if not (flyEntry and flyEntry.enabled) then
-                        hum.PlatformStand = false
-                    end
+                    if not (flyEntry and flyEntry.enabled) then hum.PlatformStand = false end
                 end
                 if hum:GetState() == Enum.HumanoidStateType.Physics then
                     hum:ChangeState(Enum.HumanoidStateType.GettingUp)
@@ -966,16 +924,25 @@ local function applyAntiFling(on)
     end
 end
 
-local function teleportAllToMe()
-    local c = LP.Character
-    if not c then return end
-    local hrp = c:FindFirstChild("HumanoidRootPart")
-    if not hrp then return end
-    for _, plr in ipairs(Players:GetPlayers()) do
-        if plr ~= LP and plr.Character then
-            local tHRP = plr.Character:FindFirstChild("HumanoidRootPart")
-            if tHRP then tHRP.CFrame = hrp.CFrame * CFrame.new(0,0,-4) end
-        end
+local flingAuraConn
+local function applyFlingAura(on)
+    if on then
+        flingAuraConn = RunService.Heartbeat:Connect(function()
+            local c = LP.Character
+            if not c then return end
+            local hrp = c:FindFirstChild("HumanoidRootPart")
+            if not hrp then return end
+            for _, plr in ipairs(Players:GetPlayers()) do
+                if plr ~= LP and plr.Character and plr.Character ~= c then
+                    local tHRP = plr.Character:FindFirstChild("HumanoidRootPart")
+                    if tHRP and (tHRP.Position - hrp.Position).Magnitude < 4 then
+                        task.spawn(function() pcall(SkidFling, plr) end)
+                    end
+                end
+            end
+        end)
+    else
+        if flingAuraConn then flingAuraConn:Disconnect() flingAuraConn=nil end
     end
 end
 
@@ -997,8 +964,7 @@ registerFn("aura", "Kill Aura", "убить в радиусе", "💀", applyAur
 registerFn("invisible", "Invisible", "невидимость для себя", "👻", applyInvisible)
 registerFn("yield", "Infinite Yield", "физ. состояние", "🧲", applyInfiniteYield)
 registerFn("flingaura", "Touch Fling", "касание = отброс", "👆", applyFlingAura)
-registerFn("flingnormal", "Fling Radius 8", "отброс в радиусе 8", "🌀", applyFlingNormal)
-registerFn("antifling", "Anti-Fling", "защита от флинга", "🛡", applyAntiFling)
+registerFn("antifling", "Anti-Fling", "защита", "🛡", applyAntiFling)
 
 local function teleport(target)
     local c = LP.Character
@@ -1010,7 +976,47 @@ local function teleport(target)
     if hrp and tHRP then hrp.CFrame = tHRP.CFrame * CFrame.new(0,0,-3) end
 end
 
--- ===== ОКНА =====
+local function flingNearest()
+    local c = LP.Character
+    if not c then return end
+    local hrp = c:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    local nearest, dist = nil, math.huge
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LP and plr.Character and plr.Character ~= c then
+            local tHRP = plr.Character:FindFirstChild("HumanoidRootPart")
+            if tHRP then
+                local d = (tHRP.Position - hrp.Position).Magnitude
+                if d < dist then dist = d nearest = plr end
+            end
+        end
+    end
+    if nearest then task.spawn(function() pcall(SkidFling, nearest) end) end
+end
+
+local function flingAll()
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LP and plr.Character and plr.Character ~= LP.Character then
+            task.spawn(function() pcall(SkidFling, plr) end)
+            task.wait(0.2)
+        end
+    end
+end
+
+local function teleportAllToMe()
+    local c = LP.Character
+    if not c then return end
+    local hrp = c:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LP and plr.Character then
+            local tHRP = plr.Character:FindFirstChild("HumanoidRootPart")
+            if tHRP then tHRP.CFrame = hrp.CFrame * CFrame.new(0,0,-4) end
+        end
+    end
+end
+
+-- ОКНА
 local BingWin, bScroll = makeWin("🎯 Bing Hack Tools")
 local HackWin, hScroll = makeWin("⚡ Hack Tools")
 local SetWin, setScroll = makeWin("⚙ Settings")
@@ -1021,7 +1027,7 @@ local PowWin = makeWin("⏻ Power")
 local TikTokWin = makeWin("📱 TikTok")
 
 -- ============================================
--- TIKTOK с мини-сериалами
+-- TIKTOK
 -- ============================================
 for _, c in ipairs(TikTokWin:GetChildren()) do
     if c:IsA("ScrollingFrame") then c:Destroy() end
@@ -1051,116 +1057,215 @@ local function stopTikTokSound()
     end
 end
 
+local function tryPlayVideoSound()
+    stopTikTokSound()
+    pcall(function()
+        currentTikTokSound = Instance.new("Sound")
+        currentTikTokSound.SoundId = VIDEO_SOUND_ID
+        currentTikTokSound.Volume = 0.15
+        currentTikTokSound.Looped = true
+        currentTikTokSound.Parent = ScreenGui
+        currentTikTokSound:Play()
+    end)
+end
+
 local videoHeight = 560
 
-local tiktokVideos = {
-    {
-        user="@c_drama_king", desc="💰 МИЛЛИАРДЕР ПОЛЮБИЛ УБОРЩИЦУ | Серия 1 #cdrama #китай #любовь",
-        likes="4.2M", comments="88K", shares="210K",
-        music="китайская драма — саундтрек",
-        soundId="rbxassetid://1837879082",
-        frames = {
-            {bg={Color3.fromRGB(60,10,20), Color3.fromRGB(120,20,40)}, emoji="🏢", title="КИТАЙСКИЙ МИЛЛИАРДЕР", sub="Серия 1: случайная встреча"},
-            {bg={Color3.fromRGB(80,20,30), Color3.fromRGB(140,40,60)}, emoji="🧹", title="Она — простая уборщица", sub="работает в его офисе"},
-            {bg={Color3.fromRGB(100,30,40), Color3.fromRGB(160,50,80)}, emoji="💼", title="Он — владелец корпорации", sub="¥ 8,000,000,000 на счету"},
-            {bg={Color3.fromRGB(120,40,60), Color3.fromRGB(180,60,100)}, emoji="👁", title="Их взгляды встретились...", sub="«кто это?» — подумал он"},
-            {bg={Color3.fromRGB(140,50,70), Color3.fromRGB(200,80,120)}, emoji="💗", title="Он влюбился с первого взгляда", sub="продолжение в серии 2..."},
-        },
-    },
-    {
-        user="@shaolin_master", desc="🐉 УЧЕНИК ПОБЕДИЛ МАСТЕРА КУНГ-ФУ #kungfu #боевик #китай",
-        likes="2.8M", comments="42K", shares="120K",
-        music="восточный барабан — epic",
-        soundId="rbxassetid://1843773157",
-        frames = {
-            {bg={Color3.fromRGB(20,30,10), Color3.fromRGB(50,80,20)}, emoji="⛩", title="ШАОЛИНЬ. 3-Й ДЕНЬ ОБУЧЕНИЯ", sub="мастер сказал: «ты не готов»"},
-            {bg={Color3.fromRGB(30,40,15), Color3.fromRGB(70,100,30)}, emoji="🥋", title="«ВСТАВАЙ И СРАЖАЙСЯ!»", sub="его удары летели со всех сторон"},
-            {bg={Color3.fromRGB(40,50,20), Color3.fromRGB(90,120,40)}, emoji="👊", title="Ученик собрал силы...", sub="«х-х-а-а!»"},
-            {bg={Color3.fromRGB(60,70,30), Color3.fromRGB(120,150,50)}, emoji="💥", title="ОДНИМ УДАРОМ — МАСТЕР ПАЛ", sub="«ты... стал сильнее...»"},
-            {bg={Color3.fromRGB(80,90,40), Color3.fromRGB(150,180,60)}, emoji="🐲", title="НОВАЯ ЛЕГЕНДА НАЧАЛАСЬ", sub="серия 2 скоро..."},
-        },
-    },
-    {
-        user="@china_history", desc="👑 ИМПЕРАТОР ПРИЗВАЛ ДРАКОНА #китай #история #дракон",
-        likes="3.1M", comments="56K", shares="180K",
-        music="традиционный гуцинь",
-        soundId="rbxassetid://1836315523",
-        frames = {
-            {bg={Color3.fromRGB(80,40,10), Color3.fromRGB(160,80,20)}, emoji="🏯", title="ЗАПРЕТНЫЙ ГОРОД, 1420 год", sub="император молил о помощи"},
-            {bg={Color3.fromRGB(100,50,15), Color3.fromRGB(180,100,30)}, emoji="👑", title="«О дракон, услышь меня!»", sub="— сказал император в храме"},
-            {bg={Color3.fromRGB(120,60,20), Color3.fromRGB(200,120,40)}, emoji="🐲", title="НЕБО РАЗВЕРЗЛОСЬ", sub="гигантский дракон спускался"},
-            {bg={Color3.fromRGB(140,70,25), Color3.fromRGB(220,140,50)}, emoji="⚡", title="«ЧЕГО ТЫ ХОЧЕШЬ, СМЕРТНЫЙ?»", sub="голос сотрясал землю"},
-            {bg={Color3.fromRGB(160,80,30), Color3.fromRGB(240,160,60)}, emoji="🗡", title="«Мир. Или я разрушу трон»", sub="окончание в финале..."},
-        },
-    },
-    {
-        user="@cat_money", desc="😹 КОТ-МИЛЛИОНЕР И ЕГО РАБ #комедия #смешно #китай",
-        likes="5.6M", comments="120K", shares="340K",
-        music="смешная китайская музыка",
-        soundId="rbxassetid://904700482",
-        frames = {
-            {bg={Color3.fromRGB(50,50,50), Color3.fromRGB(100,100,100)}, emoji="🐱", title="КОТ-МИЛЛИОНЕР В КИТАЕ", sub="у него 3000 работников"},
-            {bg={Color3.fromRGB(60,60,60), Color3.fromRGB(120,120,120)}, emoji="🧑‍💼", title="«БОСС, я готов!»", sub="сказал новый работник"},
-            {bg={Color3.fromRGB(70,70,70), Color3.fromRGB(140,140,140)}, emoji="🐾", title="Кот поднял лапу...", sub="«Мяу». — «Что это значит?»"},
-            {bg={Color3.fromRGB(80,80,80), Color3.fromRGB(160,160,160)}, emoji="💰", title="«Твоя зарплата — 5 рыб»", sub="работник в шоке"},
-            {bg={Color3.fromRGB(90,90,90), Color3.fromRGB(180,180,180)}, emoji="😂", title="ОН СОГЛАСИЛСЯ", sub="потому что работа — мечта"},
-        },
-    },
-    {
-        user="@c_horror", desc="👻 ОНА ВЕРНУЛАСЬ ЧЕРЕЗ 1000 ЛЕТ #хоррор #китай",
-        likes="3.4M", comments="72K", shares="150K",
-        music="страшная китайская музыка",
-        soundId="rbxassetid://1836315523",
-        frames = {
-            {bg={Color3.fromRGB(10,0,20), Color3.fromRGB(30,5,50)}, emoji="🌑", title="1000 ЛЕТ НАЗАД ОНА УМЕРЛА", sub="но дух вернулся..."},
-            {bg={Color3.fromRGB(15,5,25), Color3.fromRGB(40,10,60)}, emoji="🕯", title="МОНАХ ЗАЖЁГ СВЕЧУ", sub="«что-то не так...»"},
-            {bg={Color3.fromRGB(20,10,30), Color3.fromRGB(50,15,70)}, emoji="👤", title="В ДВЕРЯХ СТОЯЛА ТЕНЬ", sub="но у неё не было ног"},
-            {bg={Color3.fromRGB(25,15,35), Color3.fromRGB(60,20,80)}, emoji="👻", title="«Я ВЕРНУЛАСЬ...»", sub="прошептала она"},
-            {bg={Color3.fromRGB(30,20,40), Color3.fromRGB(70,25,90)}, emoji="💀", title="СТРАХ ТОЛЬКО НАЧАЛСЯ", sub="серия 2 скоро..."},
-        },
-    },
-    {
-        user="@metro_love", desc="🚇 СУДЬБА В МЕТРО #романтика #любовь #китай",
-        likes="1.9M", comments="28K", shares="72K",
-        music="romantic китайская скрипка",
-        soundId="rbxassetid://1837824724",
-        frames = {
-            {bg={Color3.fromRGB(40,20,60), Color3.fromRGB(80,40,120)}, emoji="🚇", title="ПЕКИН, ЧАС ПИК", sub="два незнакомца в вагоне"},
-            {bg={Color3.fromRGB(60,30,80), Color3.fromRGB(100,50,140)}, emoji="📱", title="Она уронила телефон", sub="он его поймал"},
-            {bg={Color3.fromRGB(80,40,100), Color3.fromRGB(120,60,160)}, emoji="👀", title="«Спасибо...»", sub="их глаза встретились"},
-            {bg={Color3.fromRGB(100,50,120), Color3.fromRGB(140,70,180)}, emoji="💞", title="«Может, кофе?»", sub="она улыбнулась"},
-            {bg={Color3.fromRGB(120,60,140), Color3.fromRGB(160,80,200)}, emoji="☕", title="ГОД СПУСТЯ — СВАДЬБА", sub="тот день изменил всё"},
-        },
-    },
-    {
-        user="@hk_action", desc="🔫 ОН БЫЛ И ТО И ТО #боевик #экшн #китай",
-        likes="2.2M", comments="34K", shares="88K",
-        music="hardcore китайский рэп",
-        soundId="rbxassetid://1843773157",
-        frames = {
-            {bg={Color3.fromRGB(15,15,25), Color3.fromRGB(40,40,60)}, emoji="🏙", title="ГОНКОНГ, НОЧЬ", sub="двойная игра началась"},
-            {bg={Color3.fromRGB(25,25,35), Color3.fromRGB(60,60,80)}, emoji="🕵", title="«Я полицейский», — сказал он", sub="смотря боссу в глаза"},
-            {bg={Color3.fromRGB(35,35,45), Color3.fromRGB(80,80,100)}, emoji="🔫", title="«Я знаю», — ответил босс", sub="и улыбнулся"},
-            {bg={Color3.fromRGB(45,45,55), Color3.fromRGB(100,100,120)}, emoji="💥", title="ПЕРЕСТРЕЛКА НАЧАЛАСЬ", sub="никто не выйдет живым"},
-            {bg={Color3.fromRGB(55,55,65), Color3.fromRGB(120,120,140)}, emoji="🎬", title="ФИНАЛ В СЛЕДУЮЩЕЙ СЕРИИ", sub="..."},
-        },
-    },
-    {
-        user="@china_tech", desc="😂 МАМА УЗНАЛА ПРО VPN #смешно #китай #мем",
-        likes="6.7M", comments="180K", shares="500K",
-        music="funny drill",
-        soundId="rbxassetid://904700482",
-        frames = {
-            {bg={Color3.fromRGB(40,30,20), Color3.fromRGB(80,60,40)}, emoji="🧑‍💻", title="СИЖУ В ИНТЕРНЕТЕ ЧЕРЕЗ VPN", sub="думал мама не узнает"},
-            {bg={Color3.fromRGB(60,40,30), Color3.fromRGB(100,80,50)}, emoji="👩", title="МАМА: «А ЭТО ЧТО ЗА ПРИЛОЖЕНИЕ?»", sub="я в холодном поту"},
-            {bg={Color3.fromRGB(80,50,40), Color3.fromRGB(120,100,60)}, emoji="😰", title="«Э-э-э... ЭТО ДЛЯ УЧЁБЫ»", sub="мама не верит"},
-            {bg={Color3.fromRGB(100,60,50), Color3.fromRGB(140,120,70)}, emoji="📞", title="МАМА ЗВОНИТ В ПОЛИЦИЮ", sub="«алло, тут сын что-то делает»"},
-            {bg={Color3.fromRGB(120,70,60), Color3.fromRGB(160,140,80)}, emoji="🚔", title="ФИНАЛ...", sub="продолжение в следующем видео 💀"},
-        },
-    },
+-- Комментарии
+local commentsDB = {}
+for i = 1, 20 do
+    commentsDB[i] = {
+        {user="Никто_не_узнает", text="это лучшее что я видел 😭", likes=234},
+        {user="кот_миллионер", text="я тут главный 🐱", likes=89},
+        {user="jack.femboy", text="бин, ты лучший 💅", likes=420},
+        {user="скептик_5000", text="фейк но смешно", likes=12},
+        {user="тикток_фанат", text="серия 2 когда??", likes=156},
+    }
+end
+
+local profilesDB = {
+    ["@c_drama_king"] = {name="C-Drama King", followers="12.4M", following="234", likes="88.2M", verified=true, desc="китайские сериалы 24/7"},
+    ["@shaolin_master"] = {name="Shaolin Master", followers="4.1M", following="12", likes="34.5M", verified=true, desc="школа кунг-фу"},
+    ["@china_history"] = {name="China History", followers="8.8M", following="87", likes="120M", verified=true, desc="история Поднебесной"},
+    ["@cat_money"] = {name="Cat Money", followers="15.2M", following="1", likes="230M", verified=true, desc="самый богатый кот 🐱"},
+    ["@c_horror"] = {name="C-Horror", followers="2.9M", following="45", likes="21.4M", verified=false, desc="ужасы из Китая"},
+    ["@metro_love"] = {name="Metro Love", followers="1.8M", following="203", likes="18.9M", verified=false, desc="романтика в метро"},
+    ["@hk_action"] = {name="HK Action", followers="3.3M", following="56", likes="42.1M", verified=true, desc="гонконг боевики"},
+    ["@china_tech"] = {name="China Tech", followers="22.1M", following="234", likes="420M", verified=true, desc="мемы про технологии"},
 }
 
-local function makeTikTokVideo(vid)
+local function openProfile(username, parentWin)
+    local prof = profilesDB[username] or {name=username:gsub("@",""), followers="123", following="45", likes="6.7K", verified=false, desc="ноунейм"}
+    local ProfileWin = Instance.new("Frame", parentWin)
+    ProfileWin.Size = UDim2.new(1, 0, 1, 0)
+    ProfileWin.BackgroundColor3 = Color3.fromRGB(10, 14, 12)
+    ProfileWin.BackgroundTransparency = 0.05
+    ProfileWin.BorderSizePixel = 0
+    ProfileWin.ZIndex = 100
+    ProfileWin.Parent = parentWin
+    Instance.new("UICorner", ProfileWin).CornerRadius = UDim.new(0, 22)
+    local backBtn = Instance.new("TextButton", ProfileWin)
+    backBtn.Position = UDim2.new(0, 16, 0, 16)
+    backBtn.Size = UDim2.new(0, 40, 0, 40)
+    backBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    backBtn.Text = "←"
+    backBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    backBtn.Font = Enum.Font.GothamBold
+    backBtn.TextSize = 22
+    backBtn.BorderSizePixel = 0
+    Instance.new("UICorner", backBtn).CornerRadius = UDim.new(1, 0)
+    backBtn.MouseButton1Click:Connect(function() playClick() ProfileWin:Destroy() end)
+    local avatar = Instance.new("Frame", ProfileWin)
+    avatar.AnchorPoint = Vector2.new(0.5, 0)
+    avatar.Position = UDim2.new(0.5, 0, 0, 80)
+    avatar.Size = UDim2.new(0, 120, 0, 120)
+    avatar.BackgroundColor3 = Color3.fromRGB(math.random(50,200), math.random(50,200), math.random(50,200))
+    avatar.BorderSizePixel = 0
+    Instance.new("UICorner", avatar).CornerRadius = UDim.new(1, 0)
+    local letter = Instance.new("TextLabel", avatar)
+    letter.Size = UDim2.new(1, 0, 1, 0)
+    letter.BackgroundTransparency = 1
+    letter.Text = (prof.name:sub(1,1)):upper()
+    letter.TextColor3 = Color3.fromRGB(255, 255, 255)
+    letter.Font = Enum.Font.GothamBold
+    letter.TextSize = 60
+    local uname = Instance.new("TextLabel", ProfileWin)
+    uname.Position = UDim2.new(0, 0, 0, 210)
+    uname.Size = UDim2.new(1, 0, 0, 30)
+    uname.BackgroundTransparency = 1
+    uname.Text = username .. (prof.verified and " ✓" or "")
+    uname.TextColor3 = prof.verified and Color3.fromRGB(0, 200, 255) or Color3.fromRGB(255, 255, 255)
+    uname.Font = Enum.Font.GothamBold
+    uname.TextSize = 22
+    local statsRow = Instance.new("Frame", ProfileWin)
+    statsRow.Position = UDim2.new(0, 40, 0, 260)
+    statsRow.Size = UDim2.new(1, -80, 0, 60)
+    statsRow.BackgroundTransparency = 1
+    local statsL = Instance.new("UIListLayout", statsRow)
+    statsL.FillDirection = Enum.FillDirection.Horizontal
+    statsL.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    statsL.Padding = UDim.new(0, 30)
+    local function mkStat(val, lbl)
+        local c = Instance.new("Frame", statsRow)
+        c.Size = UDim2.new(0, 100, 1, 0)
+        c.BackgroundTransparency = 1
+        local v = Instance.new("TextLabel", c)
+        v.Size = UDim2.new(1, 0, 0.6, 0)
+        v.BackgroundTransparency = 1
+        v.Text = val
+        v.TextColor3 = Color3.fromRGB(255, 255, 255)
+        v.Font = Enum.Font.GothamBold
+        v.TextSize = 20
+        local l = Instance.new("TextLabel", c)
+        l.Position = UDim2.new(0, 0, 0.6, 0)
+        l.Size = UDim2.new(1, 0, 0.4, 0)
+        l.BackgroundTransparency = 1
+        l.Text = lbl
+        l.TextColor3 = Color3.fromRGB(150, 170, 160)
+        l.Font = Enum.Font.Gotham
+        l.TextSize = 12
+    end
+    mkStat(prof.followers, "подписчики")
+    mkStat(prof.following, "подписки")
+    mkStat(prof.likes, "лайки")
+    local descLbl = Instance.new("TextLabel", ProfileWin)
+    descLbl.Position = UDim2.new(0, 40, 0, 340)
+    descLbl.Size = UDim2.new(1, -80, 0, 60)
+    descLbl.BackgroundTransparency = 1
+    descLbl.Text = prof.desc
+    descLbl.TextColor3 = Color3.fromRGB(220, 230, 225)
+    descLbl.Font = Enum.Font.Gotham
+    descLbl.TextSize = 14
+    descLbl.TextWrapped = true
+    local followBtn = Instance.new("TextButton", ProfileWin)
+    followBtn.AnchorPoint = Vector2.new(0.5, 0)
+    followBtn.Position = UDim2.new(0.5, 0, 0, 420)
+    followBtn.Size = UDim2.new(0, 200, 0, 44)
+    followBtn.BackgroundColor3 = Color3.fromRGB(255, 40, 80)
+    followBtn.Text = "Подписаться"
+    followBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    followBtn.Font = Enum.Font.GothamBold
+    followBtn.TextSize = 15
+    followBtn.BorderSizePixel = 0
+    Instance.new("UICorner", followBtn).CornerRadius = UDim.new(0, 10)
+    local following = false
+    followBtn.MouseButton1Click:Connect(function()
+        playClick()
+        following = not following
+        followBtn.Text = following and "✓ Подписан" or "Подписаться"
+        followBtn.BackgroundColor3 = following and Color3.fromRGB(60, 60, 60) or Color3.fromRGB(255, 40, 80)
+    end)
+end
+
+-- Видео
+local tiktokVideos = {
+    {user="@c_drama_king", desc="💰 МИЛЛИАРДЕР ПОЛЮБИЛ УБОРЩИЦУ | Серия 1", likes="4.2M", comments="88K", shares="210K", music="китайская драма", soundId=VIDEO_SOUND_ID,
+     frames = {
+        {bg={Color3.fromRGB(60,10,20), Color3.fromRGB(120,20,40)}, emoji="🏢", title="КИТАЙСКИЙ МИЛЛИАРДЕР", sub="Серия 1: случайная встреча"},
+        {bg={Color3.fromRGB(80,20,30), Color3.fromRGB(140,40,60)}, emoji="🧹", title="Она — простая уборщица", sub="работает в его офисе"},
+        {bg={Color3.fromRGB(100,30,40), Color3.fromRGB(160,50,80)}, emoji="💼", title="Он — владелец корпорации", sub="¥ 8,000,000,000 на счету"},
+        {bg={Color3.fromRGB(120,40,60), Color3.fromRGB(180,60,100)}, emoji="👁", title="Их взгляды встретились...", sub="«кто это?» — подумал он"},
+        {bg={Color3.fromRGB(140,50,70), Color3.fromRGB(200,80,120)}, emoji="💗", title="Он влюбился", sub="продолжение в серии 2..."},
+    }},
+    {user="@shaolin_master", desc="🐉 УЧЕНИК ПОБЕДИЛ МАСТЕРА КУНГ-ФУ", likes="2.8M", comments="42K", shares="120K", music="восточный барабан", soundId=VIDEO_SOUND_ID,
+     frames = {
+        {bg={Color3.fromRGB(20,30,10), Color3.fromRGB(50,80,20)}, emoji="⛩", title="ШАОЛИНЬ", sub="3-й день обучения"},
+        {bg={Color3.fromRGB(30,40,15), Color3.fromRGB(70,100,30)}, emoji="🥋", title="«ВСТАВАЙ!»", sub="удары со всех сторон"},
+        {bg={Color3.fromRGB(40,50,20), Color3.fromRGB(90,120,40)}, emoji="👊", title="Ученик собрал силы", sub="«х-х-а-а!»"},
+        {bg={Color3.fromRGB(60,70,30), Color3.fromRGB(120,150,50)}, emoji="💥", title="МАСТЕР ПАЛ", sub="«ты... стал сильнее...»"},
+        {bg={Color3.fromRGB(80,90,40), Color3.fromRGB(150,180,60)}, emoji="🐲", title="НОВАЯ ЛЕГЕНДА", sub="серия 2 скоро..."},
+    }},
+    {user="@china_history", desc="👑 ИМПЕРАТОР ПРИЗВАЛ ДРАКОНА", likes="3.1M", comments="56K", shares="180K", music="гуцинь", soundId=VIDEO_SOUND_ID,
+     frames = {
+        {bg={Color3.fromRGB(80,40,10), Color3.fromRGB(160,80,20)}, emoji="🏯", title="ЗАПРЕТНЫЙ ГОРОД, 1420", sub="император молил о помощи"},
+        {bg={Color3.fromRGB(100,50,15), Color3.fromRGB(180,100,30)}, emoji="👑", title="«О ДРАКОН, УСЛЫШЬ!»", sub="— сказал император"},
+        {bg={Color3.fromRGB(120,60,20), Color3.fromRGB(200,120,40)}, emoji="🐲", title="НЕБО РАЗВЕРЗЛОСЬ", sub="гигантский дракон спускался"},
+        {bg={Color3.fromRGB(140,70,25), Color3.fromRGB(220,140,50)}, emoji="⚡", title="«ЧЕГО ТЫ ХОЧЕШЬ?»", sub="голос сотрясал землю"},
+        {bg={Color3.fromRGB(160,80,30), Color3.fromRGB(240,160,60)}, emoji="🗡", title="«МИР. ИЛИ...»", sub="окончание в финале"},
+    }},
+    {user="@cat_money", desc="😹 КОТ-МИЛЛИОНЕР И ЕГО РАБ", likes="5.6M", comments="120K", shares="340K", music="смешная музыка", soundId=VIDEO_SOUND_ID,
+     frames = {
+        {bg={Color3.fromRGB(50,50,50), Color3.fromRGB(100,100,100)}, emoji="🐱", title="КОТ-МИЛЛИОНЕР", sub="у него 3000 работников"},
+        {bg={Color3.fromRGB(60,60,60), Color3.fromRGB(120,120,120)}, emoji="🧑‍💼", title="«БОСС, я готов!»", sub="новый работник"},
+        {bg={Color3.fromRGB(70,70,70), Color3.fromRGB(140,140,140)}, emoji="🐾", title="Кот поднял лапу...", sub="«Мяу» — «Что?»"},
+        {bg={Color3.fromRGB(80,80,80), Color3.fromRGB(160,160,160)}, emoji="💰", title="«Зарплата — 5 рыб»", sub="работник в шоке"},
+        {bg={Color3.fromRGB(90,90,90), Color3.fromRGB(180,180,180)}, emoji="😂", title="ОН СОГЛАСИЛСЯ", sub="работа — мечта"},
+    }},
+    {user="@c_horror", desc="👻 ОНА ВЕРНУЛАСЬ ЧЕРЕЗ 1000 ЛЕТ", likes="3.4M", comments="72K", shares="150K", music="страшная музыка", soundId=VIDEO_SOUND_ID,
+     frames = {
+        {bg={Color3.fromRGB(10,0,20), Color3.fromRGB(30,5,50)}, emoji="🌑", title="1000 ЛЕТ НАЗАД", sub="она умерла..."},
+        {bg={Color3.fromRGB(15,5,25), Color3.fromRGB(40,10,60)}, emoji="🕯", title="МОНАХ ЗАЖЁГ СВЕЧУ", sub="«что-то не так...»"},
+        {bg={Color3.fromRGB(20,10,30), Color3.fromRGB(50,15,70)}, emoji="👤", title="В ДВЕРЯХ — ТЕНЬ", sub="без ног"},
+        {bg={Color3.fromRGB(25,15,35), Color3.fromRGB(60,20,80)}, emoji="👻", title="«Я ВЕРНУЛАСЬ...»", sub="прошептала она"},
+        {bg={Color3.fromRGB(30,20,40), Color3.fromRGB(70,25,90)}, emoji="💀", title="СТРАХ НАЧАЛСЯ", sub="серия 2 скоро..."},
+    }},
+    {user="@metro_love", desc="🚇 СУДЬБА В МЕТРО", likes="1.9M", comments="28K", shares="72K", music="романтическая скрипка", soundId=VIDEO_SOUND_ID,
+     frames = {
+        {bg={Color3.fromRGB(40,20,60), Color3.fromRGB(80,40,120)}, emoji="🚇", title="ПЕКИН, ЧАС ПИК", sub="два незнакомца"},
+        {bg={Color3.fromRGB(60,30,80), Color3.fromRGB(100,50,140)}, emoji="📱", title="Уронила телефон", sub="он поймал"},
+        {bg={Color3.fromRGB(80,40,100), Color3.fromRGB(120,60,160)}, emoji="👀", title="«Спасибо...»", sub="глаза встретились"},
+        {bg={Color3.fromRGB(100,50,120), Color3.fromRGB(140,70,180)}, emoji="💞", title="«Кофе?»", sub="она улыбнулась"},
+        {bg={Color3.fromRGB(120,60,140), Color3.fromRGB(160,80,200)}, emoji="☕", title="ГОД СПУСТЯ — СВАДЬБА", sub="тот день изменил всё"},
+    }},
+    {user="@hk_action", desc="🔫 ОН БЫЛ И ТО И ТО", likes="2.2M", comments="34K", shares="88K", music="китайский рэп", soundId=VIDEO_SOUND_ID,
+     frames = {
+        {bg={Color3.fromRGB(15,15,25), Color3.fromRGB(40,40,60)}, emoji="🏙", title="ГОНКОНГ, НОЧЬ", sub="двойная игра"},
+        {bg={Color3.fromRGB(25,25,35), Color3.fromRGB(60,60,80)}, emoji="🕵", title="«Я полицейский»", sub="смотря боссу в глаза"},
+        {bg={Color3.fromRGB(35,35,45), Color3.fromRGB(80,80,100)}, emoji="🔫", title="«Я знаю»", sub="и улыбнулся босс"},
+        {bg={Color3.fromRGB(45,45,55), Color3.fromRGB(100,100,120)}, emoji="💥", title="ПЕРЕСТРЕЛКА", sub="никто не выйдет"},
+        {bg={Color3.fromRGB(55,55,65), Color3.fromRGB(120,120,140)}, emoji="🎬", title="ФИНАЛ В СЛЕДУЮЩЕЙ", sub="..."},
+    }},
+    {user="@china_tech", desc="😂 МАМА УЗНАЛА ПРО VPN", likes="6.7M", comments="180K", shares="500K", music="funny drill", soundId=VIDEO_SOUND_ID,
+     frames = {
+        {bg={Color3.fromRGB(40,30,20), Color3.fromRGB(80,60,40)}, emoji="🧑‍💻", title="СИЖУ ЧЕРЕЗ VPN", sub="думал не узнают"},
+        {bg={Color3.fromRGB(60,40,30), Color3.fromRGB(100,80,50)}, emoji="👩", title="МАМА: «ЧТО ЭТО?»", sub="я в холодном поту"},
+        {bg={Color3.fromRGB(80,50,40), Color3.fromRGB(120,100,60)}, emoji="😰", title="«Э... ДЛЯ УЧЁБЫ»", sub="мама не верит"},
+        {bg={Color3.fromRGB(100,60,50), Color3.fromRGB(140,120,70)}, emoji="📞", title="ЗВОНИТ В ПОЛИЦИЮ", sub="«алло, тут сын...»"},
+        {bg={Color3.fromRGB(120,70,60), Color3.fromRGB(160,140,80)}, emoji="🚔", title="ФИНАЛ...", sub="продолжение 💀"},
+    }},
+}
+
+local function makeTikTokVideo(vid, idx)
     local videoFrame = Instance.new("Frame", tiktokFeed)
     videoFrame.Size = UDim2.new(1, 0, 0, videoHeight)
     videoFrame.BackgroundColor3 = vid.frames[1].bg[1]
@@ -1174,25 +1279,9 @@ local function makeTikTokVideo(vid)
         ColorSequenceKeypoint.new(1, vid.frames[1].bg[2]),
     }
     
-    local bgDecor = Instance.new("Frame", videoFrame)
-    bgDecor.Size = UDim2.new(1, 0, 1, 0)
-    bgDecor.BackgroundTransparency = 1
-    bgDecor.ClipsDescendants = true
-    local bgDots = {}
-    for d = 1, 20 do
-        local dot = Instance.new("Frame", bgDecor)
-        dot.Size = UDim2.new(0, 4, 0, 4)
-        dot.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        dot.BackgroundTransparency = 0.7
-        dot.BorderSizePixel = 0
-        dot.Position = UDim2.new(math.random(), 0, math.random(), 0)
-        Instance.new("UICorner", dot).CornerRadius = UDim.new(1, 0)
-        table.insert(bgDots, dot)
-    end
-    
     local centerEmoji = Instance.new("TextLabel", videoFrame)
     centerEmoji.AnchorPoint = Vector2.new(0.5, 0.5)
-    centerEmoji.Position = UDim2.new(0.5, 0, 0.35, 0)
+    centerEmoji.Position = UDim2.new(0.5, 0, 0.32, 0)
     centerEmoji.Size = UDim2.new(0, 200, 0, 200)
     centerEmoji.BackgroundTransparency = 1
     centerEmoji.Text = vid.frames[1].emoji
@@ -1238,16 +1327,20 @@ local function makeTikTokVideo(vid)
     liveLbl.BorderSizePixel = 0
     Instance.new("UICorner", liveLbl).CornerRadius = UDim.new(1, 0)
     
-    local userLbl = Instance.new("TextLabel", videoFrame)
-    userLbl.Position = UDim2.new(0, 20, 1, -160)
-    userLbl.Size = UDim2.new(0.7, 0, 0, 26)
-    userLbl.BackgroundTransparency = 1
-    userLbl.Text = vid.user
-    userLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
-    userLbl.Font = Enum.Font.GothamBold
-    userLbl.TextSize = 20
-    userLbl.TextXAlignment = Enum.TextXAlignment.Left
-    userLbl.TextStrokeTransparency = 0.4
+    local userBtn = Instance.new("TextButton", videoFrame)
+    userBtn.Position = UDim2.new(0, 20, 1, -160)
+    userBtn.Size = UDim2.new(0.5, 0, 0, 26)
+    userBtn.BackgroundTransparency = 1
+    userBtn.Text = vid.user
+    userBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    userBtn.Font = Enum.Font.GothamBold
+    userBtn.TextSize = 20
+    userBtn.TextXAlignment = Enum.TextXAlignment.Left
+    userBtn.TextStrokeTransparency = 0.4
+    userBtn.MouseButton1Click:Connect(function()
+        playClick()
+        openProfile(vid.user, TikTokWin)
+    end)
     
     local descLbl = Instance.new("TextLabel", videoFrame)
     descLbl.Position = UDim2.new(0, 20, 1, -130)
@@ -1280,7 +1373,6 @@ local function makeTikTokVideo(vid)
     progressBg.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
     progressBg.BorderSizePixel = 0
     Instance.new("UICorner", progressBg).CornerRadius = UDim.new(1, 0)
-    
     local progressFill = Instance.new("Frame", progressBg)
     progressFill.Size = UDim2.new(0, 0, 1, 0)
     progressFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -1293,42 +1385,90 @@ local function makeTikTokVideo(vid)
     rightPanel.Size = UDim2.new(0, 70, 0, 300)
     rightPanel.BackgroundTransparency = 1
     
-    local function makeActionButton(glyph, label, yPos, isLiked)
-        local c = Instance.new("Frame", rightPanel)
-        c.Position = UDim2.new(0, 0, 0, yPos)
-        c.Size = UDim2.new(1, 0, 0, 62)
-        c.BackgroundTransparency = 1
-        
-        local ic = Instance.new("TextLabel", c)
-        ic.Size = UDim2.new(1, 0, 0, 44)
-        ic.BackgroundTransparency = 1
-        ic.Text = glyph
-        ic.TextColor3 = isLiked and Color3.fromRGB(255, 60, 100) or Color3.fromRGB(255, 255, 255)
-        ic.Font = Enum.Font.GothamBold
-        ic.TextSize = 38
-        ic.TextStrokeTransparency = 0.5
-        
-        local lb = Instance.new("TextLabel", c)
-        lb.Position = UDim2.new(0, 0, 0, 44)
-        lb.Size = UDim2.new(1, 0, 0, 18)
-        lb.BackgroundTransparency = 1
-        lb.Text = label
-        lb.TextColor3 = Color3.fromRGB(255, 255, 255)
-        lb.Font = Enum.Font.GothamBold
-        lb.TextSize = 12
-        lb.TextStrokeTransparency = 0.5
-        
-        return ic, lb
-    end
+    local likeContainer = Instance.new("Frame", rightPanel)
+    likeContainer.Position = UDim2.new(0, 0, 0, 0)
+    likeContainer.Size = UDim2.new(1, 0, 0, 62)
+    likeContainer.BackgroundTransparency = 1
+    local likeIcon = Instance.new("TextLabel", likeContainer)
+    likeIcon.Size = UDim2.new(1, 0, 0, 44)
+    likeIcon.BackgroundTransparency = 1
+    likeIcon.Text = "🤍"
+    likeIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
+    likeIcon.Font = Enum.Font.GothamBold
+    likeIcon.TextSize = 38
+    likeIcon.TextStrokeTransparency = 0.5
+    local likeLbl = Instance.new("TextLabel", likeContainer)
+    likeLbl.Position = UDim2.new(0, 0, 0, 44)
+    likeLbl.Size = UDim2.new(1, 0, 0, 18)
+    likeLbl.BackgroundTransparency = 1
+    likeLbl.Text = vid.likes
+    likeLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+    likeLbl.Font = Enum.Font.GothamBold
+    likeLbl.TextSize = 12
+    likeLbl.TextStrokeTransparency = 0.5
+    local likeBtn = Instance.new("TextButton", likeIcon)
+    likeBtn.Size = UDim2.new(1, 0, 1, 0)
+    likeBtn.BackgroundTransparency = 1
+    likeBtn.Text = ""
+    local liked = false
+    likeBtn.MouseButton1Click:Connect(function()
+        liked = not liked
+        playClick()
+        likeIcon.Text = liked and "❤" or "🤍"
+        likeIcon.TextColor3 = liked and Color3.fromRGB(255, 60, 100) or Color3.fromRGB(255, 255, 255)
+    end)
     
-    local likeIcon, likeLbl = makeActionButton("❤", vid.likes, 0, true)
-    local cmtIcon, cmtLbl = makeActionButton("💬", vid.comments, 70, false)
-    local shrIcon, shrLbl = makeActionButton("↗", vid.shares, 140, false)
-    local _, musLbl = makeActionButton("🎵", "хор", 210, false)
+    local cmtContainer = Instance.new("Frame", rightPanel)
+    cmtContainer.Position = UDim2.new(0, 0, 0, 70)
+    cmtContainer.Size = UDim2.new(1, 0, 0, 62)
+    cmtContainer.BackgroundTransparency = 1
+    local cmtIcon = Instance.new("TextLabel", cmtContainer)
+    cmtIcon.Size = UDim2.new(1, 0, 0, 44)
+    cmtIcon.BackgroundTransparency = 1
+    cmtIcon.Text = "💬"
+    cmtIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
+    cmtIcon.Font = Enum.Font.GothamBold
+    cmtIcon.TextSize = 34
+    cmtIcon.TextStrokeTransparency = 0.5
+    local cmtLbl = Instance.new("TextLabel", cmtContainer)
+    cmtLbl.Position = UDim2.new(0, 0, 0, 44)
+    cmtLbl.Size = UDim2.new(1, 0, 0, 18)
+    cmtLbl.BackgroundTransparency = 1
+    cmtLbl.Text = vid.comments
+    cmtLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+    cmtLbl.Font = Enum.Font.GothamBold
+    cmtLbl.TextSize = 12
+    cmtLbl.TextStrokeTransparency = 0.5
+    local cmtBtn = Instance.new("TextButton", cmtIcon)
+    cmtBtn.Size = UDim2.new(1, 0, 1, 0)
+    cmtBtn.BackgroundTransparency = 1
+    cmtBtn.Text = ""
+    
+    local shrContainer = Instance.new("Frame", rightPanel)
+    shrContainer.Position = UDim2.new(0, 0, 0, 140)
+    shrContainer.Size = UDim2.new(1, 0, 0, 62)
+    shrContainer.BackgroundTransparency = 1
+    local shrIcon = Instance.new("TextLabel", shrContainer)
+    shrIcon.Size = UDim2.new(1, 0, 0, 44)
+    shrIcon.BackgroundTransparency = 1
+    shrIcon.Text = "↗"
+    shrIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
+    shrIcon.Font = Enum.Font.GothamBold
+    shrIcon.TextSize = 34
+    shrIcon.TextStrokeTransparency = 0.5
+    local shrLbl = Instance.new("TextLabel", shrContainer)
+    shrLbl.Position = UDim2.new(0, 0, 0, 44)
+    shrLbl.Size = UDim2.new(1, 0, 0, 18)
+    shrLbl.BackgroundTransparency = 1
+    shrLbl.Text = vid.shares
+    shrLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+    shrLbl.Font = Enum.Font.GothamBold
+    shrLbl.TextSize = 12
+    shrLbl.TextStrokeTransparency = 0.5
     
     local disc = Instance.new("Frame", rightPanel)
     disc.AnchorPoint = Vector2.new(0.5, 0)
-    disc.Position = UDim2.new(0.5, 0, 0, 272)
+    disc.Position = UDim2.new(0.5, 0, 0, 220)
     disc.Size = UDim2.new(0, 44, 0, 44)
     disc.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     disc.BorderSizePixel = 0
@@ -1340,7 +1480,6 @@ local function makeTikTokVideo(vid)
     discInner.TextColor3 = Color3.fromRGB(255, 255, 255)
     discInner.Font = Enum.Font.GothamBold
     discInner.TextSize = 20
-    
     task.spawn(function()
         while disc.Parent do
             disc.Rotation = (disc.Rotation + 3) % 360
@@ -1355,23 +1494,17 @@ local function makeTikTokVideo(vid)
         if not videoFrame.Parent then return end
         local frameData = vid.frames[sceneIdx]
         if not frameData then return end
-        
-        Tween:Create(videoFrame, TweenInfo.new(0.6), {
-            BackgroundColor3 = frameData.bg[1]
-        }):Play()
+        Tween:Create(videoFrame, TweenInfo.new(0.6), {BackgroundColor3 = frameData.bg[1]}):Play()
         vgrad.Color = ColorSequence.new{
             ColorSequenceKeypoint.new(0, frameData.bg[1]),
             ColorSequenceKeypoint.new(1, frameData.bg[2]),
         }
-        
         centerEmoji.TextTransparency = 1
         Tween:Create(centerEmoji, TweenInfo.new(0.4), {TextTransparency = 0}):Play()
         centerEmoji.Text = frameData.emoji
-        
         titleLbl.TextTransparency = 1
         Tween:Create(titleLbl, TweenInfo.new(0.4), {TextTransparency = 0}):Play()
         titleLbl.Text = frameData.title
-        
         subLbl.TextTransparency = 1
         Tween:Create(subLbl, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
         subLbl.Text = frameData.sub
@@ -1380,21 +1513,17 @@ local function makeTikTokVideo(vid)
     local function startPlayback()
         if isPlaying then return end
         isPlaying = true
-        
+        tryPlayVideoSound()
         playThread = task.spawn(function()
             local sceneTime = 1.4
             local totalScenes = #vid.frames
-            
             for i = 1, totalScenes do
                 if not isPlaying or not videoFrame.Parent then break end
                 playScene(i)
                 local progress = i / totalScenes
-                Tween:Create(progressFill, TweenInfo.new(sceneTime), {
-                    Size = UDim2.new(progress, 0, 1, 0)
-                }):Play()
+                Tween:Create(progressFill, TweenInfo.new(sceneTime), {Size = UDim2.new(progress, 0, 1, 0)}):Play()
                 task.wait(sceneTime)
             end
-            
             if videoFrame.Parent then
                 task.wait(0.5)
                 progressFill.Size = UDim2.new(0, 0, 1, 0)
@@ -1408,6 +1537,7 @@ local function makeTikTokVideo(vid)
     
     local function stopPlayback()
         isPlaying = false
+        stopTikTokSound()
         if playThread then
             pcall(function() task.cancel(playThread) end)
             playThread = nil
@@ -1425,6 +1555,9 @@ local function makeTikTokVideo(vid)
         playClick()
         local now = tick()
         if now - lastTap < 0.35 then
+            liked = true
+            likeIcon.Text = "❤"
+            likeIcon.TextColor3 = Color3.fromRGB(255, 60, 100)
             local bigHeart = Instance.new("TextLabel", videoFrame)
             bigHeart.AnchorPoint = Vector2.new(0.5, 0.5)
             bigHeart.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -1441,71 +1574,183 @@ local function makeTikTokVideo(vid)
             }):Play()
             Debris:AddItem(bigHeart, 0.8)
         else
-            if isPlaying then
-                stopPlayback()
-            else
-                startPlayback()
-            end
+            if isPlaying then stopPlayback() else startPlayback() end
         end
         lastTap = now
     end)
     
-    tapArea.MouseEnter:Connect(function()
-        stopTikTokSound()
-        currentTikTokSound = Instance.new("Sound")
-        currentTikTokSound.SoundId = vid.soundId
-        currentTikTokSound.Volume = 0.15
-        currentTikTokSound.Looped = true
-        currentTikTokSound.Parent = ScreenGui
-        currentTikTokSound:Play()
-    end)
-    tapArea.MouseLeave:Connect(function()
-        stopTikTokSound()
-    end)
-    
-    local likeBtn = Instance.new("TextButton", likeIcon)
-    likeBtn.Size = UDim2.new(1, 0, 1, 0)
-    likeBtn.BackgroundTransparency = 1
-    likeBtn.Text = ""
-    local liked = true
-    likeBtn.MouseButton1Click:Connect(function()
-        liked = not liked
+    -- КОММЕНТЫ
+    cmtBtn.MouseButton1Click:Connect(function()
         playClick()
-        likeIcon.TextColor3 = liked and Color3.fromRGB(255, 60, 100) or Color3.fromRGB(255, 255, 255)
+        local CommentsWin = Instance.new("Frame", TikTokWin)
+        CommentsWin.Size = UDim2.new(1, 0, 1, 0)
+        CommentsWin.BackgroundColor3 = Color3.fromRGB(15, 18, 16)
+        CommentsWin.BackgroundTransparency = 0.05
+        CommentsWin.BorderSizePixel = 0
+        CommentsWin.ZIndex = 100
+        CommentsWin.Parent = TikTokWin
+        Instance.new("UICorner", CommentsWin).CornerRadius = UDim.new(0, 22)
+        
+        local cHeader = Instance.new("Frame", CommentsWin)
+        cHeader.Size = UDim2.new(1, 0, 0, 50)
+        cHeader.BackgroundColor3 = Color3.fromRGB(20, 25, 22)
+        cHeader.BorderSizePixel = 0
+        Instance.new("UICorner", cHeader).CornerRadius = UDim.new(0, 22)
+        
+        local cTitle = Instance.new("TextLabel", cHeader)
+        cTitle.Position = UDim2.new(0, 16, 0, 0)
+        cTitle.Size = UDim2.new(1, -100, 1, 0)
+        cTitle.BackgroundTransparency = 1
+        cTitle.Text = "Комментарии (" .. vid.comments .. ")"
+        cTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+        cTitle.Font = Enum.Font.GothamBold
+        cTitle.TextSize = 16
+        cTitle.TextXAlignment = Enum.TextXAlignment.Left
+        
+        local cClose = Instance.new("TextButton", cHeader)
+        cClose.AnchorPoint = Vector2.new(1, 0.5)
+        cClose.Position = UDim2.new(1, -16, 0.5, 0)
+        cClose.Size = UDim2.new(0, 30, 0, 30)
+        cClose.BackgroundColor3 = Color3.fromRGB(200, 60, 60)
+        cClose.Text = "×"
+        cClose.TextColor3 = Color3.fromRGB(255, 255, 255)
+        cClose.Font = Enum.Font.GothamBold
+        cClose.TextSize = 18
+        cClose.BorderSizePixel = 0
+        Instance.new("UICorner", cClose).CornerRadius = UDim.new(1, 0)
+        cClose.MouseButton1Click:Connect(function() playClick() CommentsWin:Destroy() end)
+        
+        local cList = Instance.new("ScrollingFrame", CommentsWin)
+        cList.Position = UDim2.new(0, 12, 0, 60)
+        cList.Size = UDim2.new(1, -24, 1, -130)
+        cList.BackgroundTransparency = 1
+        cList.BorderSizePixel = 0
+        cList.ScrollBarThickness = 4
+        cList.ScrollBarImageColor3 = accent()
+        cList.CanvasSize = UDim2.new(0, 0, 0, 0)
+        cList.AutomaticCanvasSize = Enum.AutomaticSize.Y
+        local cLL = Instance.new("UIListLayout", cList)
+        cLL.Padding = UDim.new(0, 8)
+        cLL.SortOrder = Enum.SortOrder.LayoutOrder
+        
+        local function refreshComments()
+            for _, ch in ipairs(cList:GetChildren()) do
+                if not ch:IsA("UIListLayout") then ch:Destroy() end
+            end
+            for i, cm in ipairs(commentsDB[idx] or {}) do
+                local row = Instance.new("Frame", cList)
+                row.Size = UDim2.new(1, -10, 0, 70)
+                row.BackgroundColor3 = Color3.fromRGB(20, 26, 22)
+                row.BorderSizePixel = 0
+                row.LayoutOrder = i
+                Instance.new("UICorner", row).CornerRadius = UDim.new(0, 10)
+                local uname = Instance.new("TextButton", row)
+                uname.Position = UDim2.new(0, 12, 0, 8)
+                uname.Size = UDim2.new(0.5, 0, 0, 18)
+                uname.BackgroundTransparency = 1
+                uname.Text = cm.user
+                uname.TextColor3 = Color3.fromRGB(150, 200, 255)
+                uname.Font = Enum.Font.GothamBold
+                uname.TextSize = 13
+                uname.TextXAlignment = Enum.TextXAlignment.Left
+                uname.MouseButton1Click:Connect(function()
+                    playClick()
+                    openProfile("@" .. cm.user, TikTokWin)
+                end)
+                local txt = Instance.new("TextLabel", row)
+                txt.Position = UDim2.new(0, 12, 0, 28)
+                txt.Size = UDim2.new(1, -80, 0, 34)
+                txt.BackgroundTransparency = 1
+                txt.Text = cm.text
+                txt.TextColor3 = Color3.fromRGB(230, 240, 235)
+                txt.Font = Enum.Font.Gotham
+                txt.TextSize = 13
+                txt.TextXAlignment = Enum.TextXAlignment.Left
+                txt.TextYAlignment = Enum.TextYAlignment.Top
+                txt.TextWrapped = true
+                local lk = Instance.new("TextButton", row)
+                lk.AnchorPoint = Vector2.new(1, 0.5)
+                lk.Position = UDim2.new(1, -12, 0.5, 0)
+                lk.Size = UDim2.new(0, 44, 0, 44)
+                lk.BackgroundTransparency = 1
+                lk.Text = "🤍\n" .. tostring(cm.likes)
+                lk.TextColor3 = Color3.fromRGB(255, 255, 255)
+                lk.Font = Enum.Font.GothamBold
+                lk.TextSize = 11
+                local cmLiked = false
+                lk.MouseButton1Click:Connect(function()
+                    playClick()
+                    cmLiked = not cmLiked
+                    cm.likes = cm.likes + (cmLiked and 1 or -1)
+                    lk.Text = (cmLiked and "❤\n" or "🤍\n") .. tostring(cm.likes)
+                end)
+            end
+        end
+        refreshComments()
+        
+        local inputBg = Instance.new("Frame", CommentsWin)
+        inputBg.AnchorPoint = Vector2.new(0.5, 1)
+        inputBg.Position = UDim2.new(0.5, 0, 1, -14)
+        inputBg.Size = UDim2.new(1, -24, 0, 50)
+        inputBg.BackgroundColor3 = Color3.fromRGB(20, 25, 22)
+        inputBg.BorderSizePixel = 0
+        Instance.new("UICorner", inputBg).CornerRadius = UDim.new(0, 12)
+        local cInput = Instance.new("TextBox", inputBg)
+        cInput.Position = UDim2.new(0, 12, 0, 0)
+        cInput.Size = UDim2.new(1, -110, 1, 0)
+        cInput.BackgroundTransparency = 1
+        cInput.Text = ""
+        cInput.PlaceholderText = "напиши комментарий..."
+        cInput.PlaceholderColor3 = Color3.fromRGB(120, 140, 130)
+        cInput.TextColor3 = Color3.fromRGB(230, 240, 235)
+        cInput.Font = Enum.Font.Gotham
+        cInput.TextSize = 14
+        cInput.TextXAlignment = Enum.TextXAlignment.Left
+        cInput.ClearTextOnFocus = false
+        
+        local sendBtn = Instance.new("TextButton", inputBg)
+        sendBtn.AnchorPoint = Vector2.new(1, 0.5)
+        sendBtn.Position = UDim2.new(1, -10, 0.5, 0)
+        sendBtn.Size = UDim2.new(0, 80, 0, 36)
+        sendBtn.BackgroundColor3 = accent()
+        sendBtn.Text = "Send"
+        sendBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+        sendBtn.Font = Enum.Font.GothamBold
+        sendBtn.TextSize = 13
+        sendBtn.BorderSizePixel = 0
+        Instance.new("UICorner", sendBtn).CornerRadius = UDim.new(0, 10)
+        sendBtn.MouseButton1Click:Connect(function()
+            local t = cInput.Text
+            if t == "" then return end
+            playClick()
+            table.insert(commentsDB[idx], 1, {user = LP.Name, text = t, likes = 0})
+            cInput.Text = ""
+            refreshComments()
+        end)
     end)
     
+    -- анимация диска и эмодзи
     task.spawn(function()
         while videoFrame.Parent do
             local t = tick()
-            for idx, dot in ipairs(bgDots) do
-                local p = t * 0.4 + idx
-                dot.Position = UDim2.new(
-                    0.5 + math.sin(p) * 0.45, 0,
-                    0.5 + math.cos(p * 0.9) * 0.45, 0
-                )
-            end
             centerEmoji.Rotation = math.sin(t * 1.5) * 5
             task.wait(0.03)
         end
     end)
 end
 
-for _, vid in ipairs(tiktokVideos) do
-    makeTikTokVideo(vid)
+for i, vid in ipairs(tiktokVideos) do
+    makeTikTokVideo(vid, i)
 end
 
 TikTokWin:GetPropertyChangedSignal("Visible"):Connect(function()
-    if not TikTokWin.Visible then
-        stopTikTokSound()
-    end
+    if not TikTokWin.Visible then stopTikTokSound() end
 end)
 
--- ============================================
 -- BING HACK
--- ============================================
 do
     local order = 0
-    local list = {"fly","speed","infjump","noclip","fullbright","god","antiafk","jump","esp","autofarm","aura","invisible","yield","flingaura","flingnormal","antifling"}
+    local list = {"fly","speed","infjump","noclip","fullbright","god","antiafk","jump","esp","autofarm","aura","invisible","yield","flingaura","antifling"}
     for _, id in ipairs(list) do
         order = order + 1
         local entry = functionRegistry[id]
@@ -1519,7 +1764,6 @@ do
         icon.Font = Enum.Font.GothamBold
         icon.TextSize = 26
         registerTheme(icon, "text")
-
         local n = Instance.new("TextLabel", row)
         n.Position = UDim2.new(0,62,0,12)
         n.Size = UDim2.new(0.4,0,0,20)
@@ -1529,7 +1773,6 @@ do
         n.Font = Enum.Font.GothamBold
         n.TextSize = 15
         n.TextXAlignment = Enum.TextXAlignment.Left
-
         local d = Instance.new("TextLabel", row)
         d.Position = UDim2.new(0,62,0,34)
         d.Size = UDim2.new(0.45,0,0,18)
@@ -1539,7 +1782,6 @@ do
         d.Font = Enum.Font.Gotham
         d.TextSize = 11
         d.TextXAlignment = Enum.TextXAlignment.Left
-
         local toggle = Instance.new("TextButton", row)
         toggle.AnchorPoint = Vector2.new(1,0.5)
         toggle.Position = UDim2.new(1,-122,0.5,0)
@@ -1552,7 +1794,6 @@ do
         toggle.BorderSizePixel = 0
         Instance.new("UICorner", toggle).CornerRadius = UDim.new(0,8)
         entry.toggleRef = toggle
-
         local bindBtn = Instance.new("TextButton", row)
         bindBtn.AnchorPoint = Vector2.new(1,0.5)
         bindBtn.Position = UDim2.new(1,-12,0.5,0)
@@ -1565,7 +1806,6 @@ do
         bindBtn.BorderSizePixel = 0
         Instance.new("UICorner", bindBtn).CornerRadius = UDim.new(0,10)
         entry.bindRef = bindBtn
-
         bindBtn.MouseButton1Click:Connect(function()
             playClick()
             awaitingBind = entry.id
@@ -1588,11 +1828,10 @@ tpHeader.BackgroundColor3 = Color3.fromRGB(15,22,18)
 tpHeader.LayoutOrder = 1
 tpHeader.Parent = hScroll
 Instance.new("UICorner", tpHeader).CornerRadius = UDim.new(0,10)
-
 local tpH = Instance.new("TextLabel", tpHeader)
 tpH.Size = UDim2.new(1,0,1,0)
 tpH.BackgroundTransparency = 1
-tpH.Text = "  ▾  TELEPORT / FLING TO PLAYER"
+tpH.Text = "  ▾  TP / FLING"
 tpH.TextColor3 = accent()
 tpH.Font = Enum.Font.GothamBold
 tpH.TextSize = 13
@@ -1622,17 +1861,15 @@ local function refreshPlayers()
             av.Image = "rbxthumb://type=AvatarHeadShot&id=" .. plr.UserId .. "&w=150&h=150"
             av.BorderSizePixel = 0
             Instance.new("UICorner", av).CornerRadius = UDim.new(1,0)
-
             local n = Instance.new("TextLabel", row)
             n.Position = UDim2.new(0,54,0,0)
             n.Size = UDim2.new(0.4,0,1,0)
             n.BackgroundTransparency = 1
-            n.Text = plr.DisplayName .. "  @" .. plr.Name
+            n.Text = plr.DisplayName
             n.TextColor3 = Color3.fromRGB(230,255,240)
             n.Font = Enum.Font.GothamMedium
             n.TextSize = 12
             n.TextXAlignment = Enum.TextXAlignment.Left
-
             local flingBtn = Instance.new("TextButton", row)
             flingBtn.AnchorPoint = Vector2.new(1,0.5)
             flingBtn.Position = UDim2.new(1,-94,0.5,0)
@@ -1646,11 +1883,8 @@ local function refreshPlayers()
             Instance.new("UICorner", flingBtn).CornerRadius = UDim.new(0,10)
             flingBtn.MouseButton1Click:Connect(function()
                 playClick()
-                if plr.Character and plr.Character ~= LP.Character then
-                    task.spawn(function() pcall(SkidFling, plr) end)
-                end
+                if plr.Character then task.spawn(function() pcall(SkidFling, plr) end) end
             end)
-
             local tpB = Instance.new("TextButton", row)
             tpB.AnchorPoint = Vector2.new(1,0.5)
             tpB.Position = UDim2.new(1,-10,0.5,0)
@@ -1674,7 +1908,6 @@ actionsHeader.BackgroundColor3 = Color3.fromRGB(15,22,18)
 actionsHeader.LayoutOrder = 3
 actionsHeader.Parent = hScroll
 Instance.new("UICorner", actionsHeader).CornerRadius = UDim.new(0,10)
-
 local aH = Instance.new("TextLabel", actionsHeader)
 aH.Size = UDim2.new(1,0,1,0)
 aH.BackgroundTransparency = 1
@@ -1686,7 +1919,7 @@ aH.TextXAlignment = Enum.TextXAlignment.Left
 registerTheme(aH, "text")
 
 local actionsFrame = Instance.new("Frame", hScroll)
-actionsFrame.Size = UDim2.new(1,-10,0,230)
+actionsFrame.Size = UDim2.new(1,-10,0,300)
 actionsFrame.BackgroundTransparency = 1
 actionsFrame.LayoutOrder = 4
 local actL = Instance.new("UIListLayout", actionsFrame)
@@ -1708,20 +1941,19 @@ end
 makeActionBtn("📡  TP All To Me", teleportAllToMe)
 makeActionBtn("🌀  FLING Nearest", flingNearest)
 makeActionBtn("💥  FLING ALL", flingAll)
+makeActionBtn("🚤  Спавн лодки", spawnBoat)
+makeActionBtn("🧠  Steal Brainrot", stealBrainrot)
 makeActionBtn("🌐  Rejoin Server", function()
-    pcall(function()
-        game:GetService("TeleportService"):Teleport(game.PlaceId, LP)
-    end)
+    pcall(function() game:GetService("TeleportService"):Teleport(game.PlaceId, LP) end)
 end)
 makeActionBtn("⚰  Reset Character", function()
     local hum = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
     if hum then hum.Health = 0 end
 end)
 
--- SETTINGS
+-- SETTINGS (accent + wallpaper)
 do
-    local setOrd = 0
-    setOrd = setOrd + 1
+    local setOrd = 1
     local accCard = makeCard(setScroll, 90, setOrd)
     local accLbl = Instance.new("TextLabel", accCard)
     accLbl.Position = UDim2.new(0,14,0,6)
@@ -1732,7 +1964,6 @@ do
     accLbl.Font = Enum.Font.GothamBold
     accLbl.TextSize = 14
     accLbl.TextXAlignment = Enum.TextXAlignment.Left
-
     local PALETTE = {
         {0,255,150}, {0,180,255}, {255,80,180}, {255,180,0}, {180,80,255},
         {255,80,80}, {80,255,255}, {255,255,255}, {255,50,50}, {50,255,50},
@@ -1744,7 +1975,6 @@ do
     local accRowL = Instance.new("UIListLayout", accRow)
     accRowL.FillDirection = Enum.FillDirection.Horizontal
     accRowL.Padding = UDim.new(0,6)
-
     for _, c in ipairs(PALETTE) do
         local sw = Instance.new("TextButton", accRow)
         sw.Size = UDim2.new(0,28,0,28)
@@ -1759,7 +1989,7 @@ do
         end)
     end
 
-    setOrd = setOrd + 1
+    setOrd = 2
     local wpCard = makeCard(setScroll, 80, setOrd)
     local wpLbl = Instance.new("TextLabel", wpCard)
     wpLbl.Position = UDim2.new(0,14,0,6)
@@ -1770,7 +2000,6 @@ do
     wpLbl.Font = Enum.Font.GothamBold
     wpLbl.TextSize = 14
     wpLbl.TextXAlignment = Enum.TextXAlignment.Left
-
     local wpRow = Instance.new("Frame", wpCard)
     wpRow.Position = UDim2.new(0,14,0,34)
     wpRow.Size = UDim2.new(1,-28,0,32)
@@ -1778,7 +2007,6 @@ do
     local wpRowL = Instance.new("UIListLayout", wpRow)
     wpRowL.FillDirection = Enum.FillDirection.Horizontal
     wpRowL.Padding = UDim.new(0,6)
-
     for i, W in ipairs(WALLPAPERS) do
         local sw = Instance.new("TextButton", wpRow)
         sw.Size = UDim2.new(0,36,0,30)
@@ -1797,406 +2025,7 @@ do
             applyWallpaper()
         end)
     end
-
-    setOrd = setOrd + 1
-    local brCard = makeCard(setScroll, 66, setOrd)
-    local brLbl = Instance.new("TextLabel", brCard)
-    brLbl.Position = UDim2.new(0,14,0,6)
-    brLbl.Size = UDim2.new(0.7,0,0,20)
-    brLbl.BackgroundTransparency = 1
-    brLbl.Text = "Яркость"
-    brLbl.TextColor3 = Color3.fromRGB(230,255,240)
-    brLbl.Font = Enum.Font.GothamBold
-    brLbl.TextSize = 14
-    brLbl.TextXAlignment = Enum.TextXAlignment.Left
-
-    local brVal = Instance.new("TextLabel", brCard)
-    brVal.AnchorPoint = Vector2.new(1,0)
-    brVal.Position = UDim2.new(1,-14,0,6)
-    brVal.Size = UDim2.new(0,60,0,20)
-    brVal.BackgroundTransparency = 1
-    brVal.Text = tostring(_G.KaliAiPad.settings.brightness)
-    brVal.TextColor3 = accent()
-    brVal.Font = Enum.Font.GothamBold
-    brVal.TextSize = 14
-    brVal.TextXAlignment = Enum.TextXAlignment.Right
-    registerTheme(brVal, "text")
-
-    local brTrack = Instance.new("Frame", brCard)
-    brTrack.Position = UDim2.new(0,14,0,38)
-    brTrack.Size = UDim2.new(1,-28,0,8)
-    brTrack.BackgroundColor3 = Color3.fromRGB(40,45,42)
-    brTrack.BorderSizePixel = 0
-    Instance.new("UICorner", brTrack).CornerRadius = UDim.new(1,0)
-
-    local brFill = Instance.new("Frame", brTrack)
-    brFill.Size = UDim2.new(_G.KaliAiPad.settings.brightness / 100, 0, 1, 0)
-    brFill.BackgroundColor3 = accent()
-    brFill.BorderSizePixel = 0
-    Instance.new("UICorner", brFill).CornerRadius = UDim.new(1,0)
-    registerTheme(brFill, "bg")
-
-    local brThumb = Instance.new("Frame", brTrack)
-    brThumb.AnchorPoint = Vector2.new(0.5,0.5)
-    brThumb.Position = UDim2.new(_G.KaliAiPad.settings.brightness / 100, 0, 0.5, 0)
-    brThumb.Size = UDim2.new(0,18,0,18)
-    brThumb.BackgroundColor3 = Color3.fromRGB(255,255,255)
-    brThumb.BorderSizePixel = 0
-    Instance.new("UICorner", brThumb).CornerRadius = UDim.new(1,0)
-
-    local brDrag = false
-    local function setBr(x)
-        local rel = math.clamp((x - brTrack.AbsolutePosition.X) / brTrack.AbsoluteSize.X, 0, 1)
-        local v = math.clamp(math.floor(rel * 100), 30, 100)
-        brVal.Text = tostring(v)
-        brFill.Size = UDim2.new(v/100, 0, 1, 0)
-        brThumb.Position = UDim2.new(v/100, 0, 0.5, 0)
-        _G.KaliAiPad.settings.brightness = v
-        applyBrightness()
-    end
-    local brHit = Instance.new("TextButton", brTrack)
-    brHit.Size = UDim2.new(1,20,0,20)
-    brHit.Position = UDim2.new(0,-10,0.5,-10)
-    brHit.BackgroundTransparency = 1
-    brHit.Text = ""
-    brHit.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            brDrag = true
-            setBr(input.Position.X)
-        end
-    end)
-    UIS.InputChanged:Connect(function(input)
-        if brDrag and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-            setBr(input.Position.X)
-        end
-    end)
-    UIS.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            brDrag = false
-        end
-    end)
-
-    setOrd = setOrd + 1
-    local trCard = makeCard(setScroll, 66, setOrd)
-    local trLbl = Instance.new("TextLabel", trCard)
-    trLbl.Position = UDim2.new(0,14,0,6)
-    trLbl.Size = UDim2.new(0.7,0,0,20)
-    trLbl.BackgroundTransparency = 1
-    trLbl.Text = "Прозрачность окон"
-    trLbl.TextColor3 = Color3.fromRGB(230,255,240)
-    trLbl.Font = Enum.Font.GothamBold
-    trLbl.TextSize = 14
-    trLbl.TextXAlignment = Enum.TextXAlignment.Left
-
-    local trVal = Instance.new("TextLabel", trCard)
-    trVal.AnchorPoint = Vector2.new(1,0)
-    trVal.Position = UDim2.new(1,-14,0,6)
-    trVal.Size = UDim2.new(0,60,0,20)
-    trVal.BackgroundTransparency = 1
-    trVal.Text = tostring(_G.KaliAiPad.settings.transparency)
-    trVal.TextColor3 = accent()
-    trVal.Font = Enum.Font.GothamBold
-    trVal.TextSize = 14
-    trVal.TextXAlignment = Enum.TextXAlignment.Right
-    registerTheme(trVal, "text")
-
-    local trTrack = Instance.new("Frame", trCard)
-    trTrack.Position = UDim2.new(0,14,0,38)
-    trTrack.Size = UDim2.new(1,-28,0,8)
-    trTrack.BackgroundColor3 = Color3.fromRGB(40,45,42)
-    trTrack.BorderSizePixel = 0
-    Instance.new("UICorner", trTrack).CornerRadius = UDim.new(1,0)
-
-    local trFill = Instance.new("Frame", trTrack)
-    trFill.Size = UDim2.new(_G.KaliAiPad.settings.transparency / 100, 0, 1, 0)
-    trFill.BackgroundColor3 = accent()
-    trFill.BorderSizePixel = 0
-    Instance.new("UICorner", trFill).CornerRadius = UDim.new(1,0)
-    registerTheme(trFill, "bg")
-
-    local trThumb = Instance.new("Frame", trTrack)
-    trThumb.AnchorPoint = Vector2.new(0.5,0.5)
-    trThumb.Position = UDim2.new(_G.KaliAiPad.settings.transparency / 100, 0, 0.5, 0)
-    trThumb.Size = UDim2.new(0,18,0,18)
-    trThumb.BackgroundColor3 = Color3.fromRGB(255,255,255)
-    trThumb.BorderSizePixel = 0
-    Instance.new("UICorner", trThumb).CornerRadius = UDim.new(1,0)
-
-    local trDrag = false
-    local function setTr(x)
-        local rel = math.clamp((x - trTrack.AbsolutePosition.X) / trTrack.AbsoluteSize.X, 0, 1)
-        local v = math.floor(rel * 80)
-        trVal.Text = tostring(v)
-        trFill.Size = UDim2.new(v/100, 0, 1, 0)
-        trThumb.Position = UDim2.new(v/100, 0, 0.5, 0)
-        _G.KaliAiPad.settings.transparency = v
-        for _, w in ipairs(allWins) do
-            w.BackgroundTransparency = v / 100
-        end
-    end
-    local trHit = Instance.new("TextButton", trTrack)
-    trHit.Size = UDim2.new(1,20,0,20)
-    trHit.Position = UDim2.new(0,-10,0.5,-10)
-    trHit.BackgroundTransparency = 1
-    trHit.Text = ""
-    trHit.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            trDrag = true
-            setTr(input.Position.X)
-        end
-    end)
-    UIS.InputChanged:Connect(function(input)
-        if trDrag and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-            setTr(input.Position.X)
-        end
-    end)
-    UIS.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            trDrag = false
-        end
-    end)
-
-    setOrd = setOrd + 1
-    local sndCard = makeCard(setScroll, 58, setOrd)
-    local sndLbl = Instance.new("TextLabel", sndCard)
-    sndLbl.Position = UDim2.new(0,14,0,6)
-    sndLbl.Size = UDim2.new(0.7,0,0,20)
-    sndLbl.BackgroundTransparency = 1
-    sndLbl.Text = "Звук клика"
-    sndLbl.TextColor3 = Color3.fromRGB(230,255,240)
-    sndLbl.Font = Enum.Font.GothamBold
-    sndLbl.TextSize = 14
-    sndLbl.TextXAlignment = Enum.TextXAlignment.Left
-
-    local sndTr = Instance.new("Frame", sndCard)
-    sndTr.AnchorPoint = Vector2.new(1,0.5)
-    sndTr.Position = UDim2.new(1,-14,0.5,0)
-    sndTr.Size = UDim2.new(0,46,0,26)
-    sndTr.BackgroundColor3 = _G.KaliAiPad.settings.clickSound and Color3.fromRGB(0,180,110) or Color3.fromRGB(50,50,55)
-    sndTr.BorderSizePixel = 0
-    Instance.new("UICorner", sndTr).CornerRadius = UDim.new(1,0)
-
-    local sndTh = Instance.new("Frame", sndTr)
-    sndTh.AnchorPoint = Vector2.new(0,0.5)
-    sndTh.Position = _G.KaliAiPad.settings.clickSound and UDim2.new(1,-23,0.5,0) or UDim2.new(0,3,0.5,0)
-    sndTh.Size = UDim2.new(0,20,0,20)
-    sndTh.BackgroundColor3 = Color3.fromRGB(255,255,255)
-    sndTh.BorderSizePixel = 0
-    Instance.new("UICorner", sndTh).CornerRadius = UDim.new(1,0)
-
-    local sndBtn = Instance.new("TextButton", sndTr)
-    sndBtn.Size = UDim2.new(1,0,1,0)
-    sndBtn.BackgroundTransparency = 1
-    sndBtn.Text = ""
-    sndBtn.MouseButton1Click:Connect(function()
-        _G.KaliAiPad.settings.clickSound = not _G.KaliAiPad.settings.clickSound
-        playClick()
-        if _G.KaliAiPad.settings.clickSound then
-            sndTr.BackgroundColor3 = Color3.fromRGB(0,180,110)
-            Tween:Create(sndTh, TweenInfo.new(0.2), {Position = UDim2.new(1,-23,0.5,0)}):Play()
-        else
-            sndTr.BackgroundColor3 = Color3.fromRGB(50,50,55)
-            Tween:Create(sndTh, TweenInfo.new(0.2), {Position = UDim2.new(0,3,0.5,0)}):Play()
-        end
-    end)
 end
-
--- PLAYER INFO
-local function refreshPlayerInfo()
-    for _, c in ipairs(piScroll:GetChildren()) do
-        if not c:IsA("UIListLayout") then c:Destroy() end
-    end
-    local o = 0
-    for _, plr in ipairs(Players:GetPlayers()) do
-        o = o + 1
-        local row = makeCard(piScroll, 90, o)
-        local av = Instance.new("ImageLabel", row)
-        av.Position = UDim2.new(0,12,0,12)
-        av.Size = UDim2.new(0,54,0,54)
-        av.BackgroundColor3 = Color3.fromRGB(40,40,40)
-        av.Image = "rbxthumb://type=AvatarHeadShot&id=" .. plr.UserId .. "&w=150&h=150"
-        av.BorderSizePixel = 0
-        Instance.new("UICorner", av).CornerRadius = UDim.new(1,0)
-
-        local nm = Instance.new("TextLabel", row)
-        nm.Position = UDim2.new(0,76,0,10)
-        nm.Size = UDim2.new(1,-90,0,20)
-        nm.BackgroundTransparency = 1
-        nm.Text = plr.DisplayName
-        nm.TextColor3 = Color3.fromRGB(230,255,240)
-        nm.Font = Enum.Font.GothamBold
-        nm.TextSize = 15
-        nm.TextXAlignment = Enum.TextXAlignment.Left
-
-        local un = Instance.new("TextLabel", row)
-        un.Position = UDim2.new(0,76,0,32)
-        un.Size = UDim2.new(1,-90,0,16)
-        un.BackgroundTransparency = 1
-        un.Text = "@" .. plr.Name .. "  •  ID: " .. plr.UserId
-        un.TextColor3 = Color3.fromRGB(150,170,160)
-        un.Font = Enum.Font.Gotham
-        un.TextSize = 11
-        un.TextXAlignment = Enum.TextXAlignment.Left
-    end
-end
-
--- SERVER INFO
-do
-    local function mkRow(label, ord)
-        local card = makeCard(siScroll, 40, ord)
-        local l = Instance.new("TextLabel", card)
-        l.Position = UDim2.new(0,14,0,0)
-        l.Size = UDim2.new(0.5,0,1,0)
-        l.BackgroundTransparency = 1
-        l.Text = label
-        l.TextColor3 = Color3.fromRGB(150,170,160)
-        l.Font = Enum.Font.Gotham
-        l.TextSize = 12
-        l.TextXAlignment = Enum.TextXAlignment.Left
-
-        local v = Instance.new("TextLabel", card)
-        v.Position = UDim2.new(0.5,0,0,0)
-        v.Size = UDim2.new(0.5,-14,1,0)
-        v.BackgroundTransparency = 1
-        v.Text = "—"
-        v.TextColor3 = Color3.fromRGB(230,255,240)
-        v.Font = Enum.Font.Code
-        v.TextSize = 13
-        v.TextXAlignment = Enum.TextXAlignment.Right
-        return v
-    end
-
-    local vId = mkRow("Server ID", 1)
-    local vPid = mkRow("Place ID", 2)
-    local vPl = mkRow("Игроков", 3)
-    local vMyId = mkRow("My UserId", 4)
-    local vPing = mkRow("Ping", 5)
-
-    task.spawn(function()
-        while siScroll.Parent do
-            pcall(function()
-                vId.Text = (game.JobId ~= "" and game.JobId:sub(1,12)) or "studio"
-                vPid.Text = tostring(game.PlaceId)
-                vPl.Text = #Players:GetPlayers() .. " / " .. Players.MaxPlayers
-                vMyId.Text = tostring(LP.UserId)
-                local ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue()
-                vPing.Text = string.format("%.0f ms", ping or 0)
-            end)
-            task.wait(1)
-        end
-    end)
-end
-
--- POSITIONS
-local posInputRow = makeCard(posScroll, 56, 1)
-local posInput = Instance.new("TextBox", posInputRow)
-posInput.Position = UDim2.new(0,14,0.5,-16)
-posInput.Size = UDim2.new(0.6,-20,0,32)
-posInput.BackgroundColor3 = Color3.fromRGB(12,16,14)
-posInput.BorderSizePixel = 0
-posInput.Text = ""
-posInput.PlaceholderText = "название..."
-posInput.PlaceholderColor3 = Color3.fromRGB(120,140,130)
-posInput.TextColor3 = Color3.fromRGB(230,255,240)
-posInput.Font = Enum.Font.Gotham
-posInput.TextSize = 13
-posInput.ClearTextOnFocus = false
-Instance.new("UICorner", posInput).CornerRadius = UDim.new(0,10)
-
-local posSaveBtn = Instance.new("TextButton", posInputRow)
-posSaveBtn.AnchorPoint = Vector2.new(1,0.5)
-posSaveBtn.Position = UDim2.new(1,-14,0.5,0)
-posSaveBtn.Size = UDim2.new(0,90,0,32)
-posSaveBtn.BackgroundColor3 = accent()
-posSaveBtn.Text = "SAVE"
-posSaveBtn.TextColor3 = Color3.fromRGB(0,0,0)
-posSaveBtn.Font = Enum.Font.GothamBold
-posSaveBtn.TextSize = 12
-posSaveBtn.BorderSizePixel = 0
-Instance.new("UICorner", posSaveBtn).CornerRadius = UDim.new(0,10)
-registerTheme(posSaveBtn, "bg")
-
-local posList = Instance.new("Frame", posScroll)
-posList.Size = UDim2.new(1,-10,0,0)
-posList.BackgroundTransparency = 1
-posList.LayoutOrder = 2
-posList.AutomaticSize = Enum.AutomaticSize.Y
-local posListL = Instance.new("UIListLayout", posList)
-posListL.Padding = UDim.new(0,6)
-
-local function refreshPositions()
-    for _, c in ipairs(posList:GetChildren()) do
-        if not c:IsA("UIListLayout") then c:Destroy() end
-    end
-    local ord = 0
-    for name, data in pairs(_G.KaliAiPad.positions) do
-        ord = ord + 1
-        local row = makeCard(posList, 52, ord)
-        local l = Instance.new("TextLabel", row)
-        l.Position = UDim2.new(0,14,0.5,-10)
-        l.Size = UDim2.new(0.5,0,0,20)
-        l.BackgroundTransparency = 1
-        l.Text = name
-        l.TextColor3 = Color3.fromRGB(230,255,240)
-        l.Font = Enum.Font.GothamBold
-        l.TextSize = 14
-        l.TextXAlignment = Enum.TextXAlignment.Left
-
-        local goBtn = Instance.new("TextButton", row)
-        goBtn.AnchorPoint = Vector2.new(1,0.5)
-        goBtn.Position = UDim2.new(1,-68,0.5,0)
-        goBtn.Size = UDim2.new(0,50,0,32)
-        goBtn.BackgroundColor3 = Color3.fromRGB(0,150,90)
-        goBtn.Text = "GO"
-        goBtn.TextColor3 = Color3.fromRGB(255,255,255)
-        goBtn.Font = Enum.Font.GothamBold
-        goBtn.TextSize = 12
-        goBtn.BorderSizePixel = 0
-        Instance.new("UICorner", goBtn).CornerRadius = UDim.new(0,10)
-        goBtn.MouseButton1Click:Connect(function()
-            playClick()
-            local c = LP.Character
-            if c then
-                local hrp = c:FindFirstChild("HumanoidRootPart")
-                if hrp then hrp.CFrame = CFrame.new(data[1], data[2], data[3]) end
-            end
-        end)
-
-        local delBtn = Instance.new("TextButton", row)
-        delBtn.AnchorPoint = Vector2.new(1,0.5)
-        delBtn.Position = UDim2.new(1,-12,0.5,0)
-        delBtn.Size = UDim2.new(0,50,0,32)
-        delBtn.BackgroundColor3 = Color3.fromRGB(180,50,50)
-        delBtn.Text = "DEL"
-        delBtn.TextColor3 = Color3.fromRGB(255,255,255)
-        delBtn.Font = Enum.Font.GothamBold
-        delBtn.TextSize = 12
-        delBtn.BorderSizePixel = 0
-        Instance.new("UICorner", delBtn).CornerRadius = UDim.new(0,10)
-        delBtn.MouseButton1Click:Connect(function()
-            playClick()
-            _G.KaliAiPad.positions[name] = nil
-            refreshPositions()
-        end)
-    end
-end
-
-posSaveBtn.MouseButton1Click:Connect(function()
-    playClick()
-    local n = posInput.Text
-    if n == "" then n = "pos_" .. os.time() end
-    local c = LP.Character
-    if c then
-        local hrp = c:FindFirstChild("HumanoidRootPart")
-        if hrp then
-            _G.KaliAiPad.positions[n] = {hrp.Position.X, hrp.Position.Y, hrp.Position.Z}
-            posInput.Text = ""
-            refreshPositions()
-        end
-    end
-end)
-
-refreshPositions()
 
 -- POWER
 do
@@ -2207,7 +2036,6 @@ do
     local pbL = Instance.new("UIListLayout", pB)
     pbL.Padding = UDim.new(0,14)
     pbL.HorizontalAlignment = Enum.HorizontalAlignment.Center
-
     local function mkBtn(text, icon, color, cb)
         local b = Instance.new("TextButton", pB)
         b.Size = UDim2.new(1,0,0,76)
@@ -2215,7 +2043,6 @@ do
         b.Text = ""
         b.BorderSizePixel = 0
         Instance.new("UICorner", b).CornerRadius = UDim.new(0,16)
-
         local gl = Instance.new("TextLabel", b)
         gl.Position = UDim2.new(0,20,0,0)
         gl.Size = UDim2.new(0,50,1,0)
@@ -2224,7 +2051,6 @@ do
         gl.TextColor3 = Color3.fromRGB(255,255,255)
         gl.Font = Enum.Font.GothamBold
         gl.TextSize = 30
-
         local t = Instance.new("TextLabel", b)
         t.Position = UDim2.new(0,80,0,0)
         t.Size = UDim2.new(1,-100,1,0)
@@ -2234,10 +2060,8 @@ do
         t.Font = Enum.Font.GothamBold
         t.TextSize = 18
         t.TextXAlignment = Enum.TextXAlignment.Left
-
         b.MouseButton1Click:Connect(function() playClick() if cb then cb() end end)
     end
-
     local function doBoot()
         Desktop.Visible = false
         OffLayer.Visible = false
@@ -2257,13 +2081,11 @@ do
         OffLayer.Visible = true
         _G.KaliAiPad.powered = false
     end
-
     mkBtn("Выключить", "⏻", Color3.fromRGB(180,40,40), doPowerOff)
     mkBtn("Перезагрузить", "↻", Color3.fromRGB(0,100,160), function()
         doPowerOff(); task.wait(0.5); doBoot()
     end)
     mkBtn("Закрыть меню", "✕", Color3.fromRGB(60,60,65), function() closeAllWins() end)
-
     physPower.MouseButton1Click:Connect(function()
         playClick()
         if _G.KaliAiPad.powered then doPowerOff() else doBoot() end
@@ -2274,9 +2096,9 @@ end
 makeApp("TikTok", "📱", Color3.fromRGB(20,20,20), function() closeAllWins(TikTokWin); TikTokWin.Visible = true end)
 makeApp("Bing Hack", "🎯", Color3.fromRGB(0,150,90), function() closeAllWins(BingWin); BingWin.Visible = true end)
 makeApp("Hack Tools", "⚡", Color3.fromRGB(90,130,60), function() closeAllWins(HackWin); refreshPlayers(); HackWin.Visible = true end)
-makeApp("Player Info", "👤", Color3.fromRGB(0,120,180), function() closeAllWins(PiWin); refreshPlayerInfo(); PiWin.Visible = true end)
+makeApp("Player Info", "👤", Color3.fromRGB(0,120,180), function() closeAllWins(PiWin); PiWin.Visible = true end)
 makeApp("Server", "🌐", Color3.fromRGB(60,60,200), function() closeAllWins(SiWin); SiWin.Visible = true end)
-makeApp("Positions", "📌", Color3.fromRGB(180,120,0), function() closeAllWins(PosWin); refreshPositions(); PosWin.Visible = true end)
+makeApp("Positions", "📌", Color3.fromRGB(180,120,0), function() closeAllWins(PosWin); PosWin.Visible = true end)
 makeApp("Settings", "⚙", Color3.fromRGB(90,90,100), function() closeAllWins(SetWin); SetWin.Visible = true end)
 makeApp("Power", "⏻", Color3.fromRGB(180,40,40), function() closeAllWins(PowWin); PowWin.Visible = true end)
 
@@ -2323,7 +2145,6 @@ end)
 UIS.InputBegan:Connect(function(input, gpe)
     if gpe then return end
     if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
-
     if awaitingBind then
         local entry = functionRegistry[awaitingBind]
         if entry then
@@ -2335,7 +2156,6 @@ UIS.InputBegan:Connect(function(input, gpe)
         awaitingBind = nil
         return
     end
-
     local e = keybinds[input.KeyCode]
     if e then
         e.enabled = not e.enabled
@@ -2345,7 +2165,6 @@ UIS.InputBegan:Connect(function(input, gpe)
             e.toggleRef.BackgroundColor3 = e.enabled and Color3.fromRGB(0,180,110) or Color3.fromRGB(60,60,65)
         end
     end
-
     if input.KeyCode == Enum.KeyCode.RightShift then
         ScreenGui.Enabled = not ScreenGui.Enabled
         if not ScreenGui.Enabled then stopTikTokSound() end
@@ -2368,4 +2187,4 @@ Desktop.Visible = true
 OffLayer.Visible = false
 BootLayer.Visible = false
 
-print("[Kali] ✅ v5.9 DONE — TikTok с 8 мини-сериалами")
+print("[Kali] ✅ v6.0 DONE — звуки пофикшены через pcall")
