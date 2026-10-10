@@ -1,4 +1,4 @@
--- // Kali AiPad OS // v5.7 // executor // TOUCH-FLING BYPASS ANTIFLING
+-- // Kali AiPad OS // v5.9 // executor // TikTok mini-serials
 print("[Kali] start")
 
 local Players = game:GetService("Players")
@@ -9,6 +9,7 @@ local RunService = game:GetService("RunService")
 local Lighting = game:GetService("Lighting")
 local VirtualUser = game:GetService("VirtualUser")
 local Debris = game:GetService("Debris")
+local SoundService = game:GetService("SoundService")
 
 -- CLEANUP
 local PG = LP:WaitForChild("PlayerGui")
@@ -205,7 +206,7 @@ bootSub.AnchorPoint = Vector2.new(0.5,0.5)
 bootSub.Position = UDim2.new(0.5,0,0.42,84)
 bootSub.Size = UDim2.new(1,0,0,24)
 bootSub.BackgroundTransparency = 1
-bootSub.Text = "os v5.7 • by Bean & Jack"
+bootSub.Text = "os v5.9 • by Bean & Jack"
 bootSub.TextColor3 = Color3.fromRGB(120,180,150)
 bootSub.Font = Enum.Font.Gotham
 bootSub.TextSize = 14
@@ -314,7 +315,7 @@ local SubHeader = Instance.new("TextLabel", LeftPanel)
 SubHeader.Position = UDim2.new(0,28,0,54)
 SubHeader.Size = UDim2.new(1,-52,0,20)
 SubHeader.BackgroundTransparency = 1
-SubHeader.Text = "os v5.7 • by Bean & Jack"
+SubHeader.Text = "os v5.9 • by Bean & Jack"
 SubHeader.TextColor3 = accent()
 SubHeader.Font = Enum.Font.Gotham
 SubHeader.TextSize = 13
@@ -510,11 +511,8 @@ local function makeCard(parent, height, order)
 end
 
 -- ============================================
--- FLING v4 — BYPASS ANTI-FLING (SkidFling через коллизию)
+-- FLING v4
 -- ============================================
--- Работает даже если у цели включён Anti-Fling потому что:
--- мы не даём ей BodyMover — мы сами вбиваемся в неё физикой
--- У жертвы на HRP ничего лишнего не появляется → её анти-флинг не срабатывает
 local OldFPDH = workspace.FallenPartsDestroyHeight
 local flinging = {}
 
@@ -591,7 +589,6 @@ local function SkidFling(TargetPlayer)
     if BV then BV:Destroy() end
     pcall(function() Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true) end)
     
-    -- Возвращаем себя на место
     if RootPart and RootPart.Parent and Character and Character.Parent then
         local sStart = tick()
         repeat
@@ -613,7 +610,6 @@ local function SkidFling(TargetPlayer)
     flinging[TargetPlayer] = nil
 end
 
--- Touch Fling Aura — при касании близко (< 4 стадов)
 local flingAuraConn
 local function applyFlingAura(on)
     if on then
@@ -627,7 +623,6 @@ local function applyFlingAura(on)
                     local tHRP = plr.Character:FindFirstChild("HumanoidRootPart")
                     if tHRP then
                         local d = (tHRP.Position - hrp.Position).Magnitude
-                        -- КАСАНИЕ: ближе 4 стадов
                         if d < 4 then
                             task.spawn(function() pcall(SkidFling, plr) end)
                         end
@@ -640,7 +635,6 @@ local function applyFlingAura(on)
     end
 end
 
--- Fling Normal Aura — расширенная (до 8 стадов) для тех кто анти-флинг
 local flingNormalConn
 local function applyFlingNormal(on)
     if on then
@@ -693,7 +687,7 @@ local function flingAll()
     end
 end
 
--- ===== ОСТАЛЬНЫЕ ФУНКЦИИ =====
+-- ===== ФУНКЦИИ =====
 local functionRegistry = {}
 local keybinds = {}
 local awaitingBind = nil
@@ -1000,7 +994,7 @@ registerFn("jump", "High Jump", "прыжок x3", "⇧", applyJump)
 registerFn("esp", "ESP", "подсветка игроков", "👁", applyESP)
 registerFn("autofarm", "Auto Farm", "сбор предметов", "🌾", applyAutoFarm)
 registerFn("aura", "Kill Aura", "убить в радиусе", "💀", applyAura)
-registerFn("invisible", "Invisible", "невидимость", "👻", applyInvisible)
+registerFn("invisible", "Invisible", "невидимость для себя", "👻", applyInvisible)
 registerFn("yield", "Infinite Yield", "физ. состояние", "🧲", applyInfiniteYield)
 registerFn("flingaura", "Touch Fling", "касание = отброс", "👆", applyFlingAura)
 registerFn("flingnormal", "Fling Radius 8", "отброс в радиусе 8", "🌀", applyFlingNormal)
@@ -1024,8 +1018,491 @@ local PiWin, piScroll = makeWin("👤 Player Info")
 local SiWin, siScroll = makeWin("🌐 Server Info")
 local PosWin, posScroll = makeWin("📌 Positions")
 local PowWin = makeWin("⏻ Power")
+local TikTokWin = makeWin("📱 TikTok")
 
+-- ============================================
+-- TIKTOK с мини-сериалами
+-- ============================================
+for _, c in ipairs(TikTokWin:GetChildren()) do
+    if c:IsA("ScrollingFrame") then c:Destroy() end
+end
+
+local tiktokFeed = Instance.new("ScrollingFrame", TikTokWin)
+tiktokFeed.Position = UDim2.new(0, 0, 0, 60)
+tiktokFeed.Size = UDim2.new(1, 0, 1, -60)
+tiktokFeed.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+tiktokFeed.BorderSizePixel = 0
+tiktokFeed.ScrollBarThickness = 0
+tiktokFeed.AutomaticCanvasSize = Enum.AutomaticSize.Y
+tiktokFeed.CanvasSize = UDim2.new(0, 0, 0, 0)
+tiktokFeed.ScrollingDirection = Enum.ScrollingDirection.Y
+Instance.new("UICorner", tiktokFeed).CornerRadius = UDim.new(0, 22)
+
+local ttLayout = Instance.new("UIListLayout", tiktokFeed)
+ttLayout.SortOrder = Enum.SortOrder.LayoutOrder
+ttLayout.Padding = UDim.new(0, 0)
+
+local currentTikTokSound = nil
+local function stopTikTokSound()
+    if currentTikTokSound then
+        pcall(function() currentTikTokSound:Stop() end)
+        pcall(function() currentTikTokSound:Destroy() end)
+        currentTikTokSound = nil
+    end
+end
+
+local videoHeight = 560
+
+local tiktokVideos = {
+    {
+        user="@c_drama_king", desc="💰 МИЛЛИАРДЕР ПОЛЮБИЛ УБОРЩИЦУ | Серия 1 #cdrama #китай #любовь",
+        likes="4.2M", comments="88K", shares="210K",
+        music="китайская драма — саундтрек",
+        soundId="rbxassetid://1837879082",
+        frames = {
+            {bg={Color3.fromRGB(60,10,20), Color3.fromRGB(120,20,40)}, emoji="🏢", title="КИТАЙСКИЙ МИЛЛИАРДЕР", sub="Серия 1: случайная встреча"},
+            {bg={Color3.fromRGB(80,20,30), Color3.fromRGB(140,40,60)}, emoji="🧹", title="Она — простая уборщица", sub="работает в его офисе"},
+            {bg={Color3.fromRGB(100,30,40), Color3.fromRGB(160,50,80)}, emoji="💼", title="Он — владелец корпорации", sub="¥ 8,000,000,000 на счету"},
+            {bg={Color3.fromRGB(120,40,60), Color3.fromRGB(180,60,100)}, emoji="👁", title="Их взгляды встретились...", sub="«кто это?» — подумал он"},
+            {bg={Color3.fromRGB(140,50,70), Color3.fromRGB(200,80,120)}, emoji="💗", title="Он влюбился с первого взгляда", sub="продолжение в серии 2..."},
+        },
+    },
+    {
+        user="@shaolin_master", desc="🐉 УЧЕНИК ПОБЕДИЛ МАСТЕРА КУНГ-ФУ #kungfu #боевик #китай",
+        likes="2.8M", comments="42K", shares="120K",
+        music="восточный барабан — epic",
+        soundId="rbxassetid://1843773157",
+        frames = {
+            {bg={Color3.fromRGB(20,30,10), Color3.fromRGB(50,80,20)}, emoji="⛩", title="ШАОЛИНЬ. 3-Й ДЕНЬ ОБУЧЕНИЯ", sub="мастер сказал: «ты не готов»"},
+            {bg={Color3.fromRGB(30,40,15), Color3.fromRGB(70,100,30)}, emoji="🥋", title="«ВСТАВАЙ И СРАЖАЙСЯ!»", sub="его удары летели со всех сторон"},
+            {bg={Color3.fromRGB(40,50,20), Color3.fromRGB(90,120,40)}, emoji="👊", title="Ученик собрал силы...", sub="«х-х-а-а!»"},
+            {bg={Color3.fromRGB(60,70,30), Color3.fromRGB(120,150,50)}, emoji="💥", title="ОДНИМ УДАРОМ — МАСТЕР ПАЛ", sub="«ты... стал сильнее...»"},
+            {bg={Color3.fromRGB(80,90,40), Color3.fromRGB(150,180,60)}, emoji="🐲", title="НОВАЯ ЛЕГЕНДА НАЧАЛАСЬ", sub="серия 2 скоро..."},
+        },
+    },
+    {
+        user="@china_history", desc="👑 ИМПЕРАТОР ПРИЗВАЛ ДРАКОНА #китай #история #дракон",
+        likes="3.1M", comments="56K", shares="180K",
+        music="традиционный гуцинь",
+        soundId="rbxassetid://1836315523",
+        frames = {
+            {bg={Color3.fromRGB(80,40,10), Color3.fromRGB(160,80,20)}, emoji="🏯", title="ЗАПРЕТНЫЙ ГОРОД, 1420 год", sub="император молил о помощи"},
+            {bg={Color3.fromRGB(100,50,15), Color3.fromRGB(180,100,30)}, emoji="👑", title="«О дракон, услышь меня!»", sub="— сказал император в храме"},
+            {bg={Color3.fromRGB(120,60,20), Color3.fromRGB(200,120,40)}, emoji="🐲", title="НЕБО РАЗВЕРЗЛОСЬ", sub="гигантский дракон спускался"},
+            {bg={Color3.fromRGB(140,70,25), Color3.fromRGB(220,140,50)}, emoji="⚡", title="«ЧЕГО ТЫ ХОЧЕШЬ, СМЕРТНЫЙ?»", sub="голос сотрясал землю"},
+            {bg={Color3.fromRGB(160,80,30), Color3.fromRGB(240,160,60)}, emoji="🗡", title="«Мир. Или я разрушу трон»", sub="окончание в финале..."},
+        },
+    },
+    {
+        user="@cat_money", desc="😹 КОТ-МИЛЛИОНЕР И ЕГО РАБ #комедия #смешно #китай",
+        likes="5.6M", comments="120K", shares="340K",
+        music="смешная китайская музыка",
+        soundId="rbxassetid://904700482",
+        frames = {
+            {bg={Color3.fromRGB(50,50,50), Color3.fromRGB(100,100,100)}, emoji="🐱", title="КОТ-МИЛЛИОНЕР В КИТАЕ", sub="у него 3000 работников"},
+            {bg={Color3.fromRGB(60,60,60), Color3.fromRGB(120,120,120)}, emoji="🧑‍💼", title="«БОСС, я готов!»", sub="сказал новый работник"},
+            {bg={Color3.fromRGB(70,70,70), Color3.fromRGB(140,140,140)}, emoji="🐾", title="Кот поднял лапу...", sub="«Мяу». — «Что это значит?»"},
+            {bg={Color3.fromRGB(80,80,80), Color3.fromRGB(160,160,160)}, emoji="💰", title="«Твоя зарплата — 5 рыб»", sub="работник в шоке"},
+            {bg={Color3.fromRGB(90,90,90), Color3.fromRGB(180,180,180)}, emoji="😂", title="ОН СОГЛАСИЛСЯ", sub="потому что работа — мечта"},
+        },
+    },
+    {
+        user="@c_horror", desc="👻 ОНА ВЕРНУЛАСЬ ЧЕРЕЗ 1000 ЛЕТ #хоррор #китай",
+        likes="3.4M", comments="72K", shares="150K",
+        music="страшная китайская музыка",
+        soundId="rbxassetid://1836315523",
+        frames = {
+            {bg={Color3.fromRGB(10,0,20), Color3.fromRGB(30,5,50)}, emoji="🌑", title="1000 ЛЕТ НАЗАД ОНА УМЕРЛА", sub="но дух вернулся..."},
+            {bg={Color3.fromRGB(15,5,25), Color3.fromRGB(40,10,60)}, emoji="🕯", title="МОНАХ ЗАЖЁГ СВЕЧУ", sub="«что-то не так...»"},
+            {bg={Color3.fromRGB(20,10,30), Color3.fromRGB(50,15,70)}, emoji="👤", title="В ДВЕРЯХ СТОЯЛА ТЕНЬ", sub="но у неё не было ног"},
+            {bg={Color3.fromRGB(25,15,35), Color3.fromRGB(60,20,80)}, emoji="👻", title="«Я ВЕРНУЛАСЬ...»", sub="прошептала она"},
+            {bg={Color3.fromRGB(30,20,40), Color3.fromRGB(70,25,90)}, emoji="💀", title="СТРАХ ТОЛЬКО НАЧАЛСЯ", sub="серия 2 скоро..."},
+        },
+    },
+    {
+        user="@metro_love", desc="🚇 СУДЬБА В МЕТРО #романтика #любовь #китай",
+        likes="1.9M", comments="28K", shares="72K",
+        music="romantic китайская скрипка",
+        soundId="rbxassetid://1837824724",
+        frames = {
+            {bg={Color3.fromRGB(40,20,60), Color3.fromRGB(80,40,120)}, emoji="🚇", title="ПЕКИН, ЧАС ПИК", sub="два незнакомца в вагоне"},
+            {bg={Color3.fromRGB(60,30,80), Color3.fromRGB(100,50,140)}, emoji="📱", title="Она уронила телефон", sub="он его поймал"},
+            {bg={Color3.fromRGB(80,40,100), Color3.fromRGB(120,60,160)}, emoji="👀", title="«Спасибо...»", sub="их глаза встретились"},
+            {bg={Color3.fromRGB(100,50,120), Color3.fromRGB(140,70,180)}, emoji="💞", title="«Может, кофе?»", sub="она улыбнулась"},
+            {bg={Color3.fromRGB(120,60,140), Color3.fromRGB(160,80,200)}, emoji="☕", title="ГОД СПУСТЯ — СВАДЬБА", sub="тот день изменил всё"},
+        },
+    },
+    {
+        user="@hk_action", desc="🔫 ОН БЫЛ И ТО И ТО #боевик #экшн #китай",
+        likes="2.2M", comments="34K", shares="88K",
+        music="hardcore китайский рэп",
+        soundId="rbxassetid://1843773157",
+        frames = {
+            {bg={Color3.fromRGB(15,15,25), Color3.fromRGB(40,40,60)}, emoji="🏙", title="ГОНКОНГ, НОЧЬ", sub="двойная игра началась"},
+            {bg={Color3.fromRGB(25,25,35), Color3.fromRGB(60,60,80)}, emoji="🕵", title="«Я полицейский», — сказал он", sub="смотря боссу в глаза"},
+            {bg={Color3.fromRGB(35,35,45), Color3.fromRGB(80,80,100)}, emoji="🔫", title="«Я знаю», — ответил босс", sub="и улыбнулся"},
+            {bg={Color3.fromRGB(45,45,55), Color3.fromRGB(100,100,120)}, emoji="💥", title="ПЕРЕСТРЕЛКА НАЧАЛАСЬ", sub="никто не выйдет живым"},
+            {bg={Color3.fromRGB(55,55,65), Color3.fromRGB(120,120,140)}, emoji="🎬", title="ФИНАЛ В СЛЕДУЮЩЕЙ СЕРИИ", sub="..."},
+        },
+    },
+    {
+        user="@china_tech", desc="😂 МАМА УЗНАЛА ПРО VPN #смешно #китай #мем",
+        likes="6.7M", comments="180K", shares="500K",
+        music="funny drill",
+        soundId="rbxassetid://904700482",
+        frames = {
+            {bg={Color3.fromRGB(40,30,20), Color3.fromRGB(80,60,40)}, emoji="🧑‍💻", title="СИЖУ В ИНТЕРНЕТЕ ЧЕРЕЗ VPN", sub="думал мама не узнает"},
+            {bg={Color3.fromRGB(60,40,30), Color3.fromRGB(100,80,50)}, emoji="👩", title="МАМА: «А ЭТО ЧТО ЗА ПРИЛОЖЕНИЕ?»", sub="я в холодном поту"},
+            {bg={Color3.fromRGB(80,50,40), Color3.fromRGB(120,100,60)}, emoji="😰", title="«Э-э-э... ЭТО ДЛЯ УЧЁБЫ»", sub="мама не верит"},
+            {bg={Color3.fromRGB(100,60,50), Color3.fromRGB(140,120,70)}, emoji="📞", title="МАМА ЗВОНИТ В ПОЛИЦИЮ", sub="«алло, тут сын что-то делает»"},
+            {bg={Color3.fromRGB(120,70,60), Color3.fromRGB(160,140,80)}, emoji="🚔", title="ФИНАЛ...", sub="продолжение в следующем видео 💀"},
+        },
+    },
+}
+
+local function makeTikTokVideo(vid)
+    local videoFrame = Instance.new("Frame", tiktokFeed)
+    videoFrame.Size = UDim2.new(1, 0, 0, videoHeight)
+    videoFrame.BackgroundColor3 = vid.frames[1].bg[1]
+    videoFrame.BorderSizePixel = 0
+    videoFrame.ClipsDescendants = true
+    
+    local vgrad = Instance.new("UIGradient", videoFrame)
+    vgrad.Rotation = 90
+    vgrad.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, vid.frames[1].bg[1]),
+        ColorSequenceKeypoint.new(1, vid.frames[1].bg[2]),
+    }
+    
+    local bgDecor = Instance.new("Frame", videoFrame)
+    bgDecor.Size = UDim2.new(1, 0, 1, 0)
+    bgDecor.BackgroundTransparency = 1
+    bgDecor.ClipsDescendants = true
+    local bgDots = {}
+    for d = 1, 20 do
+        local dot = Instance.new("Frame", bgDecor)
+        dot.Size = UDim2.new(0, 4, 0, 4)
+        dot.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        dot.BackgroundTransparency = 0.7
+        dot.BorderSizePixel = 0
+        dot.Position = UDim2.new(math.random(), 0, math.random(), 0)
+        Instance.new("UICorner", dot).CornerRadius = UDim.new(1, 0)
+        table.insert(bgDots, dot)
+    end
+    
+    local centerEmoji = Instance.new("TextLabel", videoFrame)
+    centerEmoji.AnchorPoint = Vector2.new(0.5, 0.5)
+    centerEmoji.Position = UDim2.new(0.5, 0, 0.35, 0)
+    centerEmoji.Size = UDim2.new(0, 200, 0, 200)
+    centerEmoji.BackgroundTransparency = 1
+    centerEmoji.Text = vid.frames[1].emoji
+    centerEmoji.TextColor3 = Color3.fromRGB(255, 255, 255)
+    centerEmoji.Font = Enum.Font.GothamBold
+    centerEmoji.TextSize = 160
+    centerEmoji.TextStrokeTransparency = 0.3
+    centerEmoji.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    
+    local titleLbl = Instance.new("TextLabel", videoFrame)
+    titleLbl.Position = UDim2.new(0, 30, 0, 60)
+    titleLbl.Size = UDim2.new(1, -60, 0, 60)
+    titleLbl.BackgroundTransparency = 1
+    titleLbl.Text = vid.frames[1].title
+    titleLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLbl.Font = Enum.Font.GothamBold
+    titleLbl.TextSize = 22
+    titleLbl.TextWrapped = true
+    titleLbl.TextStrokeTransparency = 0.3
+    titleLbl.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    titleLbl.TextYAlignment = Enum.TextYAlignment.Center
+    
+    local subLbl = Instance.new("TextLabel", videoFrame)
+    subLbl.Position = UDim2.new(0, 40, 0.5, 30)
+    subLbl.Size = UDim2.new(1, -80, 0, 40)
+    subLbl.BackgroundTransparency = 1
+    subLbl.Text = vid.frames[1].sub
+    subLbl.TextColor3 = Color3.fromRGB(240, 240, 240)
+    subLbl.Font = Enum.Font.Gotham
+    subLbl.TextSize = 16
+    subLbl.TextWrapped = true
+    subLbl.TextStrokeTransparency = 0.4
+    subLbl.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    
+    local liveLbl = Instance.new("TextLabel", videoFrame)
+    liveLbl.Position = UDim2.new(0, 16, 0, 8)
+    liveLbl.Size = UDim2.new(0, 60, 0, 24)
+    liveLbl.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
+    liveLbl.Text = "LIVE"
+    liveLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+    liveLbl.Font = Enum.Font.GothamBold
+    liveLbl.TextSize = 11
+    liveLbl.BorderSizePixel = 0
+    Instance.new("UICorner", liveLbl).CornerRadius = UDim.new(1, 0)
+    
+    local userLbl = Instance.new("TextLabel", videoFrame)
+    userLbl.Position = UDim2.new(0, 20, 1, -160)
+    userLbl.Size = UDim2.new(0.7, 0, 0, 26)
+    userLbl.BackgroundTransparency = 1
+    userLbl.Text = vid.user
+    userLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+    userLbl.Font = Enum.Font.GothamBold
+    userLbl.TextSize = 20
+    userLbl.TextXAlignment = Enum.TextXAlignment.Left
+    userLbl.TextStrokeTransparency = 0.4
+    
+    local descLbl = Instance.new("TextLabel", videoFrame)
+    descLbl.Position = UDim2.new(0, 20, 1, -130)
+    descLbl.Size = UDim2.new(0.72, 0, 0, 50)
+    descLbl.BackgroundTransparency = 1
+    descLbl.Text = vid.desc
+    descLbl.TextColor3 = Color3.fromRGB(240, 240, 240)
+    descLbl.Font = Enum.Font.Gotham
+    descLbl.TextSize = 13
+    descLbl.TextXAlignment = Enum.TextXAlignment.Left
+    descLbl.TextYAlignment = Enum.TextYAlignment.Top
+    descLbl.TextWrapped = true
+    descLbl.TextStrokeTransparency = 0.5
+    
+    local musicLbl = Instance.new("TextLabel", videoFrame)
+    musicLbl.Position = UDim2.new(0, 20, 1, -70)
+    musicLbl.Size = UDim2.new(0.72, 0, 0, 20)
+    musicLbl.BackgroundTransparency = 1
+    musicLbl.Text = "🎵 " .. vid.music
+    musicLbl.TextColor3 = Color3.fromRGB(230, 230, 230)
+    musicLbl.Font = Enum.Font.Gotham
+    musicLbl.TextSize = 12
+    musicLbl.TextXAlignment = Enum.TextXAlignment.Left
+    musicLbl.TextStrokeTransparency = 0.5
+    
+    local progressBg = Instance.new("Frame", videoFrame)
+    progressBg.AnchorPoint = Vector2.new(0.5, 1)
+    progressBg.Position = UDim2.new(0.5, 0, 1, -8)
+    progressBg.Size = UDim2.new(1, -40, 0, 3)
+    progressBg.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    progressBg.BorderSizePixel = 0
+    Instance.new("UICorner", progressBg).CornerRadius = UDim.new(1, 0)
+    
+    local progressFill = Instance.new("Frame", progressBg)
+    progressFill.Size = UDim2.new(0, 0, 1, 0)
+    progressFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    progressFill.BorderSizePixel = 0
+    Instance.new("UICorner", progressFill).CornerRadius = UDim.new(1, 0)
+    
+    local rightPanel = Instance.new("Frame", videoFrame)
+    rightPanel.AnchorPoint = Vector2.new(1, 1)
+    rightPanel.Position = UDim2.new(1, -12, 1, -30)
+    rightPanel.Size = UDim2.new(0, 70, 0, 300)
+    rightPanel.BackgroundTransparency = 1
+    
+    local function makeActionButton(glyph, label, yPos, isLiked)
+        local c = Instance.new("Frame", rightPanel)
+        c.Position = UDim2.new(0, 0, 0, yPos)
+        c.Size = UDim2.new(1, 0, 0, 62)
+        c.BackgroundTransparency = 1
+        
+        local ic = Instance.new("TextLabel", c)
+        ic.Size = UDim2.new(1, 0, 0, 44)
+        ic.BackgroundTransparency = 1
+        ic.Text = glyph
+        ic.TextColor3 = isLiked and Color3.fromRGB(255, 60, 100) or Color3.fromRGB(255, 255, 255)
+        ic.Font = Enum.Font.GothamBold
+        ic.TextSize = 38
+        ic.TextStrokeTransparency = 0.5
+        
+        local lb = Instance.new("TextLabel", c)
+        lb.Position = UDim2.new(0, 0, 0, 44)
+        lb.Size = UDim2.new(1, 0, 0, 18)
+        lb.BackgroundTransparency = 1
+        lb.Text = label
+        lb.TextColor3 = Color3.fromRGB(255, 255, 255)
+        lb.Font = Enum.Font.GothamBold
+        lb.TextSize = 12
+        lb.TextStrokeTransparency = 0.5
+        
+        return ic, lb
+    end
+    
+    local likeIcon, likeLbl = makeActionButton("❤", vid.likes, 0, true)
+    local cmtIcon, cmtLbl = makeActionButton("💬", vid.comments, 70, false)
+    local shrIcon, shrLbl = makeActionButton("↗", vid.shares, 140, false)
+    local _, musLbl = makeActionButton("🎵", "хор", 210, false)
+    
+    local disc = Instance.new("Frame", rightPanel)
+    disc.AnchorPoint = Vector2.new(0.5, 0)
+    disc.Position = UDim2.new(0.5, 0, 0, 272)
+    disc.Size = UDim2.new(0, 44, 0, 44)
+    disc.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    disc.BorderSizePixel = 0
+    Instance.new("UICorner", disc).CornerRadius = UDim.new(1, 0)
+    local discInner = Instance.new("TextLabel", disc)
+    discInner.Size = UDim2.new(1, 0, 1, 0)
+    discInner.BackgroundTransparency = 1
+    discInner.Text = "🎵"
+    discInner.TextColor3 = Color3.fromRGB(255, 255, 255)
+    discInner.Font = Enum.Font.GothamBold
+    discInner.TextSize = 20
+    
+    task.spawn(function()
+        while disc.Parent do
+            disc.Rotation = (disc.Rotation + 3) % 360
+            task.wait(0.03)
+        end
+    end)
+    
+    local isPlaying = false
+    local playThread = nil
+    
+    local function playScene(sceneIdx)
+        if not videoFrame.Parent then return end
+        local frameData = vid.frames[sceneIdx]
+        if not frameData then return end
+        
+        Tween:Create(videoFrame, TweenInfo.new(0.6), {
+            BackgroundColor3 = frameData.bg[1]
+        }):Play()
+        vgrad.Color = ColorSequence.new{
+            ColorSequenceKeypoint.new(0, frameData.bg[1]),
+            ColorSequenceKeypoint.new(1, frameData.bg[2]),
+        }
+        
+        centerEmoji.TextTransparency = 1
+        Tween:Create(centerEmoji, TweenInfo.new(0.4), {TextTransparency = 0}):Play()
+        centerEmoji.Text = frameData.emoji
+        
+        titleLbl.TextTransparency = 1
+        Tween:Create(titleLbl, TweenInfo.new(0.4), {TextTransparency = 0}):Play()
+        titleLbl.Text = frameData.title
+        
+        subLbl.TextTransparency = 1
+        Tween:Create(subLbl, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
+        subLbl.Text = frameData.sub
+    end
+    
+    local function startPlayback()
+        if isPlaying then return end
+        isPlaying = true
+        
+        playThread = task.spawn(function()
+            local sceneTime = 1.4
+            local totalScenes = #vid.frames
+            
+            for i = 1, totalScenes do
+                if not isPlaying or not videoFrame.Parent then break end
+                playScene(i)
+                local progress = i / totalScenes
+                Tween:Create(progressFill, TweenInfo.new(sceneTime), {
+                    Size = UDim2.new(progress, 0, 1, 0)
+                }):Play()
+                task.wait(sceneTime)
+            end
+            
+            if videoFrame.Parent then
+                task.wait(0.5)
+                progressFill.Size = UDim2.new(0, 0, 1, 0)
+                if isPlaying then
+                    isPlaying = false
+                    startPlayback()
+                end
+            end
+        end)
+    end
+    
+    local function stopPlayback()
+        isPlaying = false
+        if playThread then
+            pcall(function() task.cancel(playThread) end)
+            playThread = nil
+        end
+    end
+    
+    local tapArea = Instance.new("TextButton", videoFrame)
+    tapArea.Size = UDim2.new(1, -90, 1, -100)
+    tapArea.BackgroundTransparency = 1
+    tapArea.Text = ""
+    tapArea.ZIndex = 5
+    
+    local lastTap = 0
+    tapArea.MouseButton1Click:Connect(function()
+        playClick()
+        local now = tick()
+        if now - lastTap < 0.35 then
+            local bigHeart = Instance.new("TextLabel", videoFrame)
+            bigHeart.AnchorPoint = Vector2.new(0.5, 0.5)
+            bigHeart.Position = UDim2.new(0.5, 0, 0.5, 0)
+            bigHeart.Size = UDim2.new(0, 200, 0, 200)
+            bigHeart.BackgroundTransparency = 1
+            bigHeart.Text = "❤"
+            bigHeart.TextColor3 = Color3.fromRGB(255, 60, 100)
+            bigHeart.Font = Enum.Font.GothamBold
+            bigHeart.TextSize = 160
+            bigHeart.TextTransparency = 0.3
+            Tween:Create(bigHeart, TweenInfo.new(0.7), {
+                Size = UDim2.new(0, 320, 0, 320),
+                TextTransparency = 1,
+            }):Play()
+            Debris:AddItem(bigHeart, 0.8)
+        else
+            if isPlaying then
+                stopPlayback()
+            else
+                startPlayback()
+            end
+        end
+        lastTap = now
+    end)
+    
+    tapArea.MouseEnter:Connect(function()
+        stopTikTokSound()
+        currentTikTokSound = Instance.new("Sound")
+        currentTikTokSound.SoundId = vid.soundId
+        currentTikTokSound.Volume = 0.15
+        currentTikTokSound.Looped = true
+        currentTikTokSound.Parent = ScreenGui
+        currentTikTokSound:Play()
+    end)
+    tapArea.MouseLeave:Connect(function()
+        stopTikTokSound()
+    end)
+    
+    local likeBtn = Instance.new("TextButton", likeIcon)
+    likeBtn.Size = UDim2.new(1, 0, 1, 0)
+    likeBtn.BackgroundTransparency = 1
+    likeBtn.Text = ""
+    local liked = true
+    likeBtn.MouseButton1Click:Connect(function()
+        liked = not liked
+        playClick()
+        likeIcon.TextColor3 = liked and Color3.fromRGB(255, 60, 100) or Color3.fromRGB(255, 255, 255)
+    end)
+    
+    task.spawn(function()
+        while videoFrame.Parent do
+            local t = tick()
+            for idx, dot in ipairs(bgDots) do
+                local p = t * 0.4 + idx
+                dot.Position = UDim2.new(
+                    0.5 + math.sin(p) * 0.45, 0,
+                    0.5 + math.cos(p * 0.9) * 0.45, 0
+                )
+            end
+            centerEmoji.Rotation = math.sin(t * 1.5) * 5
+            task.wait(0.03)
+        end
+    end)
+end
+
+for _, vid in ipairs(tiktokVideos) do
+    makeTikTokVideo(vid)
+end
+
+TikTokWin:GetPropertyChangedSignal("Visible"):Connect(function()
+    if not TikTokWin.Visible then
+        stopTikTokSound()
+    end
+end)
+
+-- ============================================
 -- BING HACK
+-- ============================================
 do
     local order = 0
     local list = {"fly","speed","infjump","noclip","fullbright","god","antiafk","jump","esp","autofarm","aura","invisible","yield","flingaura","flingnormal","antifling"}
@@ -1794,6 +2271,7 @@ do
 end
 
 -- APPS
+makeApp("TikTok", "📱", Color3.fromRGB(20,20,20), function() closeAllWins(TikTokWin); TikTokWin.Visible = true end)
 makeApp("Bing Hack", "🎯", Color3.fromRGB(0,150,90), function() closeAllWins(BingWin); BingWin.Visible = true end)
 makeApp("Hack Tools", "⚡", Color3.fromRGB(90,130,60), function() closeAllWins(HackWin); refreshPlayers(); HackWin.Visible = true end)
 makeApp("Player Info", "👤", Color3.fromRGB(0,120,180), function() closeAllWins(PiWin); refreshPlayerInfo(); PiWin.Visible = true end)
@@ -1802,6 +2280,7 @@ makeApp("Positions", "📌", Color3.fromRGB(180,120,0), function() closeAllWins(
 makeApp("Settings", "⚙", Color3.fromRGB(90,90,100), function() closeAllWins(SetWin); SetWin.Visible = true end)
 makeApp("Power", "⏻", Color3.fromRGB(180,40,40), function() closeAllWins(PowWin); PowWin.Visible = true end)
 
+makeDockApp("📱", Color3.fromRGB(20,20,20), function() closeAllWins(TikTokWin) TikTokWin.Visible = true end)
 makeDockApp("🎯", Color3.fromRGB(0,150,90), function() closeAllWins(BingWin) BingWin.Visible = true end)
 makeDockApp("⚡", Color3.fromRGB(90,130,60), function() closeAllWins(HackWin) refreshPlayers() HackWin.Visible = true end)
 makeDockApp("⚙", Color3.fromRGB(90,90,100), function() closeAllWins(SetWin) SetWin.Visible = true end)
@@ -1815,7 +2294,11 @@ homeBar.BackgroundTransparency = 0.5
 homeBar.Text = ""
 homeBar.BorderSizePixel = 0
 Instance.new("UICorner", homeBar).CornerRadius = UDim.new(1,0)
-homeBar.MouseButton1Click:Connect(function() playClick() ScreenGui.Enabled = false end)
+homeBar.MouseButton1Click:Connect(function()
+    playClick()
+    ScreenGui.Enabled = false
+    stopTikTokSound()
+end)
 
 local dragging, dragStart, startPos
 StatusBar.InputBegan:Connect(function(input)
@@ -1865,6 +2348,7 @@ UIS.InputBegan:Connect(function(input, gpe)
 
     if input.KeyCode == Enum.KeyCode.RightShift then
         ScreenGui.Enabled = not ScreenGui.Enabled
+        if not ScreenGui.Enabled then stopTikTokSound() end
     end
 end)
 
@@ -1874,6 +2358,7 @@ Tool.Equipped:Connect(function()
 end)
 Tool.Unequipped:Connect(function()
     ScreenGui.Enabled = false
+    stopTikTokSound()
 end)
 
 applyTheme()
@@ -1883,4 +2368,4 @@ Desktop.Visible = true
 OffLayer.Visible = false
 BootLayer.Visible = false
 
-print("[Kali] ✅ v5.7 DONE — Touch-Fling BYPASS antifling")
+print("[Kali] ✅ v5.9 DONE — TikTok с 8 мини-сериалами")
